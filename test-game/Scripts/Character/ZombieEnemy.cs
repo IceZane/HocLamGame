@@ -22,6 +22,7 @@ public partial class ZombieEnemy : CharacterBody2D
 
 	public override void _Ready()
 	{
+		AddToGroup("zombie");
 		patrolTimer = new Timer();
 		patrolTimer.WaitTime = patrolDuration;
 		patrolTimer.OneShot = true;
@@ -104,12 +105,17 @@ public partial class ZombieEnemy : CharacterBody2D
 
 private void OnBodyExited(Node body)
 {
+	if (!IsInsideTree()) return; // tránh Start() khi zombie đã QueueFree
+
 	if (body.IsInGroup("player"))
 	{
 		isPlayerInRange = false;
-		patrolTimer.Start(); // tiếp tục tuần tra
+
+		if (patrolTimer.IsInsideTree())
+			patrolTimer.Start();
 	}
 }
+
 
 	private void TryAttack(Node body)
 	{
@@ -128,11 +134,27 @@ private void OnBodyExited(Node body)
 	}
 
 	public void TakeDamage(int amount)
+{
+	currentHP -= amount;
+
+	if (currentHP > 0)
 	{
-		currentHP -= amount;
-		if (currentHP <= 0)
-			Die();
+		anim.Play("Hurt");
+
+		// Tùy bạn, có thể stun zombie 0.3s
+		SetPhysicsProcess(false);
+		GetTree().CreateTimer(0.3).Timeout += () =>
+		{
+			SetPhysicsProcess(true);
+			anim.Play("Walk");
+		};
 	}
+	else
+	{
+		Die();
+	}
+}
+
 	private void OnPatrolStep()
 	{
 		if (isPlayerInRange || currentHP <= 0)
@@ -151,10 +173,16 @@ private void OnBodyExited(Node body)
 }
 
 	private void Die()
+{
+	Velocity = Vector2.Zero;
+	anim.Play("Dead");
+	SetPhysicsProcess(false);
+
+	// Delay xoá 0.5s để animation kịp chạy
+	GetTree().CreateTimer(3).Timeout += () =>
 	{
-		Velocity = Vector2.Zero;
-		anim.Play("Die");
-		SetPhysicsProcess(false);
-		QueueFree(); // hoặc delay nếu muốn hiệu ứng
-	}
+		QueueFree();
+	};
+}
+
 }

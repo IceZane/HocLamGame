@@ -181,10 +181,28 @@ private void OnAnimationFinished()
 	//       COMBAT METHODS
 	// ======================================
 	private void DoAttack()
+{
+	GD.Print("Attack executed!");
+
+	// Tìm tất cả zombie trong scene
+	var zombies = GetTree().GetNodesInGroup("zombie");
+
+	foreach (var node in zombies)
 	{
-		// Thêm logic đánh cận chiến ở đây
-		GD.Print("Attack executed!");
+		if (node is ZombieEnemy zombie)
+		{
+			// Khoảng cách đánh cận chiến (tùy bạn chỉnh)
+			float attackRange = 20f;
+
+			if (GlobalPosition.DistanceTo(zombie.GlobalPosition) <= attackRange)
+			{
+				zombie.TakeDamage(1);
+				GD.Print("Hit zombie!");
+			}
+		}
 	}
+}
+
 
 	public void DoReload()
 	{
@@ -220,22 +238,22 @@ private void OnAnimationFinished()
 	}
 
 	public void Die()
-	{
-		if (isDead) return;
+{
+	if (isDead) return;
 
-		isDead = true;
-		PlayAnim("Dead");
+	isDead = true;
+	PlayAnim("Dead");
 
-		// Tắt input hoặc di chuyển
-		Velocity = Vector2.Zero;
-		SetPhysicsProcess(false); // hoặc dùng flag riêng nếu cần
+	Velocity = Vector2.Zero;
+	SetPhysicsProcess(false);
 
-		// Ẩn UI hoặc hiển thị màn hình thua
-		var ui = GetNode<CanvasLayer>("/root/Main/UI");
-		ui.Visible = false;
+	// Tìm node HUD đúng theo cấu trúc scene
+	var ui = GetNode<CanvasLayer>("../HUD");
+	ui.Visible = false;
 
-		GD.Print("Player has died.");
-	}
+	GD.Print("Player has died.");
+}
+
 	
 	private void UpdateHealthBar()
 	{
