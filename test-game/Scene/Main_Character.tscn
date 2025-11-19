@@ -1,4 +1,4 @@
-[gd_scene load_steps=83 format=3 uid="uid://biatp2d3b1nxy"]
+[gd_scene load_steps=85 format=3 uid="uid://biatp2d3b1nxy"]
 
 [ext_resource type="Script" uid="uid://b15ir3kfhfa4j" path="res://Scripts/Character/MainCharacter.cs" id="1_kwg8s"]
 [ext_resource type="Texture2D" uid="uid://c5o7mgriw2nkt" path="res://Assets/Characters/Main/Run.png" id="2_12kmu"]
@@ -10,6 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://dfns73se6ah2t" path="res://Assets/Characters/Main/Idle.png" id="4_yopjd"]
 [ext_resource type="Texture2D" uid="uid://ccr76erpttyhv" path="res://Assets/Characters/Main/Recharge.png" id="6_yxiyb"]
 [ext_resource type="Texture2D" uid="uid://b7ghwl5bfylj7" path="res://Assets/Characters/Main/Shot.png" id="8_knn2x"]
+[ext_resource type="AudioStream" uid="uid://boacpoytayngu" path="res://Audio/556 Single MP3.mp3" id="11_mw4ht"]
+[ext_resource type="AudioStream" uid="uid://b884ymw3c8100" path="res://Audio/Angel Mag Reload Full MP3.mp3" id="12_mw4ht"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ihp4p"]
 atlas = ExtResource("2_d2w1i")
@@ -436,7 +438,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"Reload",
-"speed": 10.0
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -559,8 +561,8 @@ script = ExtResource("1_kwg8s")
 position = Vector2(1, 1)
 scale = Vector2(0.31132075, 0.28787878)
 sprite_frames = SubResource("SpriteFrames_85ica")
+animation = &"Reload"
 autoplay = "default"
-frame_progress = 0.44418105
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(1.5, 9)
@@ -568,3 +570,16 @@ shape = SubResource("RectangleShape2D_qrtld")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2, 2)
+
+[node name="GunPoint" type="Node2D" parent="."]
+position = Vector2(15, 8)
+
+[node name="ShootSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("11_mw4ht")
+
+[node name="ReloadSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("12_mw4ht")
+
+[node name="AttackSound" type="AudioStreamPlayer2D" parent="."]
+
+[node name="HitZombieSound" type="AudioStreamPlayer2D" parent="."]

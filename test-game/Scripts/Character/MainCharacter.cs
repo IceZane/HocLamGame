@@ -12,202 +12,179 @@ public partial class MainCharacter : CharacterBody2D
 
 	// ====== COMPONENTS ======
 	private AnimatedSprite2D anim;
+	// ====== Sound Effect =====
+	private AudioStreamPlayer2D shootSound;
+	private AudioStreamPlayer2D reloadSound;
+	private AudioStreamPlayer2D attackSound;
+	private AudioStreamPlayer2D hitZombieSound;
 
 	// ====== STATE FLAGS ======
+	private bool FacingRight = true;
 	private bool isAttacking = false;
 	private bool isReloading = false;
 	private bool isShooting = false;
 	private bool isHurt = false;
 	private bool isDead = false;
 
-	// Example ammo for shooting
-	public const int Capacity = 30;  // Súng chứa tối đa 30 viên
+	// ====== AMMO ======
+	public const int Capacity = 30;
+	private int currentAmmo = 30;
+	private int maxAmmo = 120;
 
-// Biến private lưu trữ dữ liệu thực tế
-	private int currentAmmo = 30;    
-	private int maxAmmo = 120;       
-
-// Property public chỉ đọc (hoặc có thể thêm set nếu muốn)
 	public int CurrentAmmo => currentAmmo;
 	public int MaxAmmo => maxAmmo;
-	
+
+	[Export] public PackedScene BulletScene;
+
+	// ====== HEALTH ======
 	private int currentHP = 4;
 	private const int maxHP = 4;
 	public int GetHP() => currentHP;
 
-
-
 	public override void _Ready()
 	{
+		shootSound = GetNode<AudioStreamPlayer2D>("ShootSound");
+		reloadSound = GetNode<AudioStreamPlayer2D>("ReloadSound");
+		attackSound = GetNode<AudioStreamPlayer2D>("AttackSound");
+		hitZombieSound = GetNode<AudioStreamPlayer2D>("HitZombieSound");
 		anim = GetNode<AnimatedSprite2D>("Sprite2D");
 		AddToGroup("player");
 
-		// Event: Animation finished
 		anim.AnimationFinished += OnAnimationFinished;
 	}
 
 	public override void _PhysicsProcess(double delta)
-{
-	Vector2 velocity = Velocity;
-
-	// Gravity
-	if (!IsOnFloor())
 	{
-		object gravityObj = ProjectSettings.GetSetting("physics/2d/default_gravity");
-		float gravity = 400f;
-		if (gravityObj is float g)
-			gravity = g;
-		velocity.Y += gravity * (float)delta;
+		Vector2 velocity = Velocity;
+
+		// Gravity
+		if (!IsOnFloor())
+		{
+			object gravityObj = ProjectSettings.GetSetting("physics/2d/default_gravity");
+			float gravity = 400f;
+			if (gravityObj is float g)
+				gravity = g;
+			velocity.Y += gravity * (float)delta;
+		}
+
+		// Jump
+		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor() && !isDead)
+			velocity.Y = JumpVelocity;
+
+		// Run or Walk
+		float dir = Input.GetAxis("ui_left", "ui_right");
+		bool running = Input.IsActionPressed("run");
+		currentSpeed = running ? RunSpeed : WalkSpeed;
+		velocity.X = dir * currentSpeed;
+
+		// Flip sprite + cập nhật FacingRight
+		if (dir != 0)
+		{
+			anim.FlipH = dir < 0;
+			FacingRight = dir > 0;
+		}
+
+		Velocity = velocity;
+		MoveAndSlide();
+
+		// =============================
+		// Combat input
+		// =============================
+		if (!isDead && !isShooting && !isAttacking && !isReloading)
+		{
+			if (Input.IsActionJustPressed("shoot") && currentAmmo > 0)
+			{
+				isShooting = true;
+				ShootBullet();
+				PlayAnim("Shooting");
+				return;
+			}
+
+			if (Input.IsActionJustPressed("attack"))
+			{
+				isAttacking = true;
+				DoAttack();
+				PlayAnim("Attack");
+				return;
+			}
+
+			if (Input.IsActionJustPressed("reload"))
+			{
+				isReloading = true;
+				DoReload();
+				PlayAnim("Reload");
+				return;
+			}
+		}
+
+		// =============================
+		// Movement animation
+		// =============================
+		if (!isShooting && !isAttacking && !isReloading && !isHurt && !isDead)
+		{
+			if (!IsOnFloor())
+				PlayAnim("Jump");
+			else if (Mathf.Abs(Velocity.X) > 0 && Input.IsActionPressed("run"))
+				PlayAnim("Run");
+			else if (Mathf.Abs(Velocity.X) > 10)
+				PlayAnim("Walk");
+			else
+				PlayAnim("default");
+		}
 	}
 
-	// Jump
-	if (Input.IsActionJustPressed("ui_accept") && IsOnFloor() && !isDead)
-		velocity.Y = JumpVelocity;
-
-	// Run or Walk
-	float dir = Input.GetAxis("ui_left", "ui_right");
-	bool running = Input.IsActionPressed("run");
-	currentSpeed = running ? RunSpeed : WalkSpeed;
-	velocity.X = dir * currentSpeed;
-
-	// Flip sprite
-	if (dir != 0)
-		anim.FlipH = dir < 0;
-	Velocity = velocity;
-	MoveAndSlide();
-	
-
-	// =============================
-	// Combat input
-	// =============================
-	if (!isDead && !isShooting && !isAttacking && !isReloading)
+	private void PlayAnim(string name)
 	{
-		if (Input.IsActionJustPressed("shoot") && currentAmmo > 0)
-		{
-			isShooting = true;
-			ShootBullet();
-			PlayAnim("Shooting"); // animation chạy 1 lần
-			return;
-		}
+		if (anim == null) return;
 
-		if (Input.IsActionJustPressed("attack"))
+		if (anim.Animation != name)
 		{
-			isAttacking = true;
-			DoAttack();
-			PlayAnim("Attack");
-			return;
-		}
-
-		if (Input.IsActionJustPressed("reload"))
-		{
-			isReloading = true;
-			DoReload();
-			PlayAnim("Reload");
-			return;
+			try { anim.Play(name); }
+			catch { GD.PrintErr($"Animation '{name}' does not exist!"); }
 		}
 	}
 
-	// =============================
-	// Movement animation only if not in combat
-	// =============================
-	
-if (!isShooting && !isAttacking && !isReloading && !isHurt && !isDead)
-{
-	if (!IsOnFloor())
-		PlayAnim("Jump");
-	else if (Mathf.Abs(Velocity.X) > 0 && Input.IsActionPressed("run"))
-		PlayAnim("Run");
-	else if (Mathf.Abs(Velocity.X) > 10)
-		PlayAnim("Walk");
-	else
-		PlayAnim("default");
-}
-
-}
-private void PlayAnim(string name)
-{
-	if (anim == null)
-		return; // phòng trường hợp anim chưa được gán
-
-	// Chỉ play nếu khác animation hiện tại
-	if (anim.Animation != name)
+	private void OnAnimationFinished()
 	{
-		try
+		switch (anim.Animation)
 		{
-			anim.Play(name);
-		}
-		catch
-		{
-			GD.PrintErr($"Animation '{name}' does not exist!");
+			case "Shooting": isShooting = false; PlayAnim("default"); break;
+			case "Attack":   isAttacking = false; PlayAnim("default"); break;
+			case "Reload":   isReloading = false; PlayAnim("default"); break;
+			case "Hurt":     isHurt = false; PlayAnim("default"); break;
+			case "Dead":     break;
 		}
 	}
-}
-
-
-// Called when an animation finishes
-private void OnAnimationFinished()
-{
-	switch (anim.Animation)
-	{
-		case "Shooting":
-			isShooting = false;
-			PlayAnim("default");
-			break;
-
-		case "Attack":
-			isAttacking = false;
-			PlayAnim("default");
-			break;
-
-		case "Reload":
-			isReloading = false;
-			PlayAnim("default");
-			break;
-
-		case "Hurt":
-			isHurt = false;
-			PlayAnim("default");
-			break;
-
-		case "Dead":
-			// do nothing
-			break;
-	}
-}
-
-
 
 	// ======================================
-	//       COMBAT METHODS
+	// COMBAT METHODS
 	// ======================================
 	private void DoAttack()
-{
-	GD.Print("Attack executed!");
-
-	// Tìm tất cả zombie trong scene
-	var zombies = GetTree().GetNodesInGroup("zombie");
-
-	foreach (var node in zombies)
 	{
-		if (node is ZombieEnemy zombie)
+		GD.Print("Attack executed!");
+		attackSound?.Play();
+		var zombies = GetTree().GetNodesInGroup("zombie");
+		foreach (var node in zombies)
 		{
-			// Khoảng cách đánh cận chiến (tùy bạn chỉnh)
-			float attackRange = 20f;
-
-			if (GlobalPosition.DistanceTo(zombie.GlobalPosition) <= attackRange)
+			if (node is ZombieEnemy zombie)
 			{
-				zombie.TakeDamage(1);
-				GD.Print("Hit zombie!");
+				
+				float attackRange = 20f;
+				if (GlobalPosition.DistanceTo(zombie.GlobalPosition) <= attackRange)
+				{
+					zombie.TakeDamage(1);
+					hitZombieSound?.Play();
+					GD.Print("Hit zombie!");
+				}
 			}
 		}
 	}
-}
-
 
 	public void DoReload()
 	{
-		int missingAmmo = Capacity - currentAmmo; // số đạn cần để đầy súng
-		int ammoToLoad = Mathf.Min(missingAmmo, maxAmmo); // không vượt quá dự trữ
+		reloadSound?.Play();
+		int missingAmmo = Capacity - currentAmmo;
+		int ammoToLoad = Mathf.Min(missingAmmo, maxAmmo);
 		currentAmmo += ammoToLoad;
 		maxAmmo -= ammoToLoad;
 
@@ -216,13 +193,29 @@ private void OnAnimationFinished()
 
 	private void ShootBullet()
 	{
-		// Thêm logic bắn đạn ở đây
+		
+		if (BulletScene == null)
+		{
+			GD.PrintErr("BulletScene chưa được gán trong Inspector!");
+			return;
+		}
+		shootSound?.Play();
+
+		Bullet bullet = BulletScene.Instantiate<Bullet>();
+
+		var muzzle = GetNode<Node2D>("GunPoint");
+		bullet.GlobalPosition = muzzle.GlobalPosition;
+
+		bullet.Direction = FacingRight ? Vector2.Right : Vector2.Left;
+
+		GetParent().AddChild(bullet);
+
 		currentAmmo--;
 		GD.Print("Shoot executed! Ammo left: " + currentAmmo);
 	}
 
 	// ======================================
-	//       EXTERNAL DAMAGE METHODS
+	// DAMAGE METHODS
 	// ======================================
 	public void TakeDamage()
 	{
@@ -230,7 +223,6 @@ private void OnAnimationFinished()
 
 		currentHP = Mathf.Max(currentHP - 1, 0);
 		PlayAnim("Hurt");
-
 		UpdateHealthBar();
 
 		if (currentHP <= 0)
@@ -238,28 +230,26 @@ private void OnAnimationFinished()
 	}
 
 	public void Die()
-{
-	if (isDead) return;
+	{
+		if (isDead) return;
 
-	isDead = true;
-	PlayAnim("Dead");
+		isDead = true;
+		PlayAnim("Dead");
 
-	Velocity = Vector2.Zero;
-	SetPhysicsProcess(false);
+		Velocity = Vector2.Zero;
+		SetPhysicsProcess(false);
 
-	// Tìm node HUD đúng theo cấu trúc scene
-	var ui = GetNode<CanvasLayer>("../HUD");
-	ui.Visible = false;
+		var ui = GetNodeOrNull<CanvasLayer>("../HUD");
+		if (ui != null)
+			ui.Visible = false;
 
-	GD.Print("Player has died.");
-}
+		GD.Print("Player has died.");
+	}
 
-	
 	private void UpdateHealthBar()
 	{
 		var healthBars = GetTree().GetNodesInGroup("healthbar");
-		if (healthBars.Count == 0)
-			return;
+		if (healthBars.Count == 0) return;
 
 		var bar = healthBars[0] as AnimatedSprite2D;
 
@@ -268,7 +258,7 @@ private void OnAnimationFinished()
 			0 => "0 HP",
 			1 => "1 HP",
 			2 => "2 HP",
-			3 => "3 HP",     // nếu bạn chưa có "3 HP", dùng lại "2 HP"
+			3 => "3 HP",
 			4 => "Full HP",
 			_ => "0 HP"
 		};

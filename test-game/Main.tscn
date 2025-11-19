@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://dkppb1dtdexow"]
+[gd_scene load_steps=18 format=4 uid="uid://dkppb1dtdexow"]
 
 [ext_resource type="Texture2D" uid="uid://c77jxr0cak6c6" path="res://Assets/Background/Base Color.png" id="1_r0du0"]
 [ext_resource type="Texture2D" uid="uid://cq3nibry26pxl" path="res://Assets/Tilemap/Tiles.png" id="2_cm0pq"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://dh84jbc7olk1r" path="res://Scripts/UI/HeathBar.cs" id="6_lgr22"]
 [ext_resource type="PackedScene" uid="uid://dgteyrwg2hljh" path="res://Scene/zombie_enemy.tscn" id="7_lgr22"]
 [ext_resource type="Script" uid="uid://ceqhldgkd0g02" path="res://Scripts/Character/ZombieEnemy.cs" id="8_trn2v"]
+[ext_resource type="PackedScene" uid="uid://17dlxku62k63" path="res://Scene/bullet.tscn" id="9_03owx"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r0du0"]
 texture = ExtResource("2_cm0pq")
@@ -194,7 +195,8 @@ tile_map_data = PackedByteArray("AAAAAAAAAAAEAAUAAAAAAAEAAAAEAAUAAAAAAAIAAAAEAAU
 tile_set = SubResource("TileSet_cm0pq")
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("3_r0du0")]
-position = Vector2(37, 501)
+position = Vector2(41, 492)
+BulletScene = ExtResource("9_03owx")
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
@@ -216,3 +218,6 @@ script = ExtResource("6_lgr22")
 [node name="ZombieEnemy" parent="." instance=ExtResource("7_lgr22")]
 position = Vector2(451, 492)
 script = ExtResource("8_trn2v")
+
+[node name="Bullet" parent="." instance=ExtResource("9_03owx")]
+position = Vector2(52, 502)
