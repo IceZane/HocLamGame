@@ -1,17 +1,17 @@
 [gd_scene load_steps=18 format=4 uid="uid://dkppb1dtdexow"]
 
-[ext_resource type="Texture2D" uid="uid://c77jxr0cak6c6" path="res://Assets/Background/Base Color.png" id="1_r0du0"]
-[ext_resource type="Texture2D" uid="uid://cq3nibry26pxl" path="res://Assets/Tilemap/Tiles.png" id="2_cm0pq"]
-[ext_resource type="PackedScene" uid="uid://biatp2d3b1nxy" path="res://Scene/Main_Character.tscn" id="3_r0du0"]
-[ext_resource type="Script" uid="uid://c864o2qvdxfef" path="res://Scripts/Character/AmmoLabel.cs" id="4_cm0pq"]
-[ext_resource type="Texture2D" uid="uid://c40lc5uldhsaw" path="res://Assets/Characters/UI/06.png" id="5_3dxm6"]
-[ext_resource type="Script" uid="uid://dh84jbc7olk1r" path="res://Scripts/UI/HeathBar.cs" id="6_lgr22"]
-[ext_resource type="PackedScene" uid="uid://dgteyrwg2hljh" path="res://Scene/zombie_enemy.tscn" id="7_lgr22"]
-[ext_resource type="Script" uid="uid://ceqhldgkd0g02" path="res://Scripts/Character/ZombieEnemy.cs" id="8_trn2v"]
-[ext_resource type="PackedScene" uid="uid://17dlxku62k63" path="res://Scene/bullet.tscn" id="9_03owx"]
+[ext_resource type="Texture2D" uid="uid://c77jxr0cak6c6" path="res://Assets/Background/Base Color.png" id="1_ofx4i"]
+[ext_resource type="Texture2D" uid="uid://cq3nibry26pxl" path="res://Assets/Tilemap/Tiles.png" id="2_lfbnc"]
+[ext_resource type="PackedScene" uid="uid://biatp2d3b1nxy" path="res://Scene/Main_Character.tscn" id="3_d8c13"]
+[ext_resource type="PackedScene" uid="uid://17dlxku62k63" path="res://Scene/bullet.tscn" id="4_8m71o"]
+[ext_resource type="Script" uid="uid://c864o2qvdxfef" path="res://Scripts/Character/AmmoLabel.cs" id="5_cu1y2"]
+[ext_resource type="Texture2D" uid="uid://c40lc5uldhsaw" path="res://Assets/Characters/UI/06.png" id="6_xb73i"]
+[ext_resource type="Script" uid="uid://dh84jbc7olk1r" path="res://Scripts/UI/HeathBar.cs" id="7_xj5bp"]
+[ext_resource type="PackedScene" uid="uid://dgteyrwg2hljh" path="res://Scene/zombie_enemy.tscn" id="8_7ynka"]
+[ext_resource type="Script" uid="uid://ceqhldgkd0g02" path="res://Scripts/Character/ZombieEnemy.cs" id="9_hjmnv"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r0du0"]
-texture = ExtResource("2_cm0pq")
+texture = ExtResource("2_lfbnc")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:0/0 = 0
@@ -114,23 +114,23 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_r0du0")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3dxm6"]
-atlas = ExtResource("5_3dxm6")
+atlas = ExtResource("6_xb73i")
 region = Rect2(194, 96, 48, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lgr22"]
-atlas = ExtResource("5_3dxm6")
+atlas = ExtResource("6_xb73i")
 region = Rect2(146, 64, 48, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_trn2v"]
-atlas = ExtResource("5_3dxm6")
+atlas = ExtResource("6_xb73i")
 region = Rect2(98, 16, 48, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_03owx"]
-atlas = ExtResource("5_3dxm6")
+atlas = ExtResource("6_xb73i")
 region = Rect2(50, 32, 48, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wkp8b"]
-atlas = ExtResource("5_3dxm6")
+atlas = ExtResource("6_xb73i")
 region = Rect2(2, 32, 48, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_c6i3y"]
@@ -184,7 +184,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("1_r0du0")
+texture = ExtResource("1_ofx4i")
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_cm0pq")
@@ -194,9 +194,9 @@ format = 2
 tile_map_data = PackedByteArray("AAAAAAAAAAAEAAUAAAAAAAEAAAAEAAUAAAAAAAIAAAAEAAUAAAAAAAMAAAAEAAUAAAAAAAQAAAAEAAUAAAAAAAUAAAAEAAUAAAAAAAYAAAAEAAUAAAAAAAcAAAAEAAUAAAAAAAgAAAAEAAUAAAAAAAkAAAAEAAUAAAAAAAoAAAAEAAUAAAAAAAsAAAAEAAUAAAAAAAwAAAAEAAUAAAAAAA0AAAAEAAUAAAAAAA4AAAAEAAUAAAAAAA8AAAAEAAUAAAAAABAAAAAEAAUAAAAAABEAAAAEAAUAAAAAABIAAAAEAAUAAAAAABMAAAAEAAUAAAAAABQAAAAEAAUAAAAAABUAAAAEAAUAAAAAABYAAAAEAAUAAAAAABcAAAAEAAUAAAAAABgAAAAEAAUAAAAAABkAAAAEAAUAAAAAABoAAAAEAAUAAAAAABsAAAAEAAUAAAAAABwAAAAEAAUAAAAAAB0AAAAEAAUAAAAAAB4AAAAEAAUAAAAAAB8AAAAEAAUAAAAAACAAAAAEAAUAAAAAACEAAAAEAAUAAAAAACIAAAAEAAUAAAAAACMAAAAEAAUAAAAAACQAAAAEAAUAAAAAACUAAAAEAAUAAAAAACYAAAAEAAUAAAAAACcAAAAEAAUAAAABACgAAAADAAQAAAACACgAAAADAAQAAAADACgAAAADAAQAAAAEACgAAAADAAQAAAAFACgAAAADAAQAAAAGACgAAAADAAQAAAAHACgAAAADAAQAAAAIACgAAAADAAQAAAAJACgAAAADAAQAAAAKACgAAAADAAQAAAALACgAAAADAAQAAAAMACgAAAADAAQAAAANACgAAAADAAQAAAAOACgAAAADAAQAAAAPACgAAAADAAQAAAAQACgAAAADAAQAAAARACgAAAADAAQAAAASACgAAAADAAQAAAATACgAAAADAAQAAAAUACgAAAADAAQAAAAVACgAAAADAAQAAAAWACgAAAADAAQAAAAXACgAAAADAAQAAAAYACgAAAADAAQAAAAZACgAAAADAAQAAAAaACgAAAADAAQAAAAbACgAAAADAAQAAAAcACgAAAADAAQAAAAdACgAAAADAAQAAAAeACgAAAADAAQAAAAfACgAAAADAAQAAAAgACgAAAADAAQAAAAhACgAAAADAAQAAAAiACgAAAADAAQAAAAjACgAAAADAAQAAAAkACgAAAADAAQAAAAlACgAAAADAAQAAAAmACgAAAADAAQAAAAnACgAAAADAAQAAAAoACgAAAADAAQAAAApACgAAAADAAQAAAAqACgAAAADAAQAAAArACgAAAADAAQAAAAsACgAAAADAAQAAAAtACgAAAADAAQAAAAuACgAAAADAAQAAAAvACgAAAADAAQAAAAwACgAAAADAAQAAAAxACgAAAADAAQAAAAyACgAAAADAAQAAAAzACgAAAADAAQAAAA0ACgAAAADAAQAAAA1ACgAAAADAAQAAAA2ACgAAAADAAQAAAA3ACgAAAADAAQAAAA4ACgAAAADAAQAAAA5ACgAAAADAAQAAAA6ACgAAAADAAQAAAA7ACgAAAADAAQAAAA8ACgAAAADAAQAAAA9ACgAAAADAAQAAAA+ACgAAAADAAQAAAA/ACgAAAADAAQAAABAACgAAAADAAQAAABBACgAAAADAAQAAABCACgAAAADAAQAAABDACgAAAADAAQAAABEACgAAAADAAQAAABFACgAAAADAAQAAABGACgAAAADAAQAAABHACgAAAADAAQAAAAAACgAAAAFAAUAAAADACcAAAACAAcAAAAEACcAAAADAAcAAAAFACYAAAACAAcAAAAGACYAAAADAAcAAAAHACUAAAACAAcAAAAIACUAAAADAAcAAAAJACQAAAACAAcAAAAKACQAAAADAAcAAAAFACcAAAACAAgAAAAGACcAAAADAAgAAAAHACYAAAACAAgAAAAIACYAAAADAAgAAAAHACcAAAACAAgAAAAIACcAAAADAAgAAAAJACUAAAACAAgAAAAKACUAAAADAAgAAAAJACYAAAACAAgAAAAKACYAAAADAAgAAAAJACcAAAACAAgAAAAKACcAAAADAAgAAAALACUAAAACAAgAAAAMACUAAAADAAgAAAALACYAAAACAAgAAAAMACYAAAADAAgAAAALACcAAAACAAgAAAAMACcAAAADAAgAAAANACUAAAACAAgAAAAOACUAAAADAAgAAAANACYAAAACAAgAAAAOACYAAAADAAgAAAANACcAAAACAAgAAAAOACcAAAADAAgAAAAPACUAAAACAAgAAAAQACUAAAADAAgAAAAPACYAAAACAAgAAAAQACYAAAADAAgAAAAPACcAAAACAAgAAAAQACcAAAADAAgAAAARACUAAAACAAgAAAASACUAAAADAAgAAAARACYAAAACAAgAAAASACYAAAADAAgAAAARACcAAAACAAgAAAASACcAAAADAAgAAAALACQAAAADAAQAAAAMACQAAAADAAQAAAANACQAAAADAAQAAAAOACQAAAADAAQAAAAPACQAAAADAAQAAAAQACQAAAADAAQAAAARACQAAAADAAQAAAASACQAAAADAAQAAAATACQAAAAEAAQAAAATACUAAAAEAAUAAAATACYAAAAEAAUAAAATACcAAAAEAAUAAAAWACQAAAAAAAAAAAAXACQAAAABAAAAAAAYACQAAAAAAAAAAAAZACQAAAABAAAAAAAaACQAAAAAAAAAAAAbACQAAAABAAAAAAAeACQAAAAAAAAAAAAfACQAAAABAAAAAAAgACQAAAAAAAAAAAAhACQAAAABAAAAAAAiACQAAAAAAAAAAAAlACQAAAAAAAAAAAAmACQAAAABAAAAAAAnACQAAAAAAAAAAAAoACQAAAABAAAAAAApACQAAAAAAAAAAAAZACEAAAAAAAAAAAAaACEAAAABAAAAAAAbACEAAAAAAAAAAAAcACEAAAABAAAAAAAdACEAAAAAAAAAAAA=")
 tile_set = SubResource("TileSet_cm0pq")
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("3_r0du0")]
+[node name="CharacterBody2D" parent="." instance=ExtResource("3_d8c13")]
 position = Vector2(41, 492)
-BulletScene = ExtResource("9_03owx")
+BulletScene = ExtResource("4_8m71o")
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
@@ -205,7 +205,7 @@ offset_left = 20.0
 offset_top = 59.0
 offset_right = 242.0
 offset_bottom = 127.0
-script = ExtResource("4_cm0pq")
+script = ExtResource("5_cu1y2")
 PlayerPath = NodePath("../../CharacterBody2D")
 
 [node name="HeathBar" type="AnimatedSprite2D" parent="HUD"]
@@ -213,11 +213,11 @@ position = Vector2(139, 36.000015)
 scale = Vector2(4.9375, 3.8125)
 sprite_frames = SubResource("SpriteFrames_c6i3y")
 animation = &"Full HP"
-script = ExtResource("6_lgr22")
+script = ExtResource("7_xj5bp")
 
-[node name="ZombieEnemy" parent="." instance=ExtResource("7_lgr22")]
+[node name="ZombieEnemy" parent="." instance=ExtResource("8_7ynka")]
 position = Vector2(451, 492)
-script = ExtResource("8_trn2v")
+script = ExtResource("9_hjmnv")
 
-[node name="Bullet" parent="." instance=ExtResource("9_03owx")]
+[node name="Bullet" parent="." instance=ExtResource("4_8m71o")]
 position = Vector2(52, 502)
