@@ -60,18 +60,24 @@ alignment = 1
 modulate = Color(0.15686275, 1, 1, 1)
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_hii65")
+theme_override_font_sizes/font_size = 24
 text = "Start Game"
 
 [node name="SettingButton" type="Button" parent="ButtonPanel"]
 modulate = Color(0, 1, 1, 1)
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_hii65")
+theme_override_font_sizes/font_size = 24
 text = "Option"
 
 [node name="QuitButton" type="Button" parent="ButtonPanel"]
 modulate = Color(0, 1, 1, 1)
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_hii65")
+theme_override_font_sizes/font_size = 24
 text = "Quit"
 
 [node name="LoadingLabel" type="Label" parent="."]

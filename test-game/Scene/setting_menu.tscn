@@ -1,0 +1,73 @@
+[gd_scene load_steps=4 format=3 uid="uid://bvhljo54ms8ak"]
+
+[ext_resource type="Script" uid="uid://d4lv5v05y5lg7" path="res://Scripts/UI/SettingMenu.cs" id="1_0w01v"]
+[ext_resource type="Texture2D" uid="uid://bsyrb6m2l6hst" path="res://Assets/Characters/UI/HD-wallpaper-video-game-guns-gore-and-cannoli-2.jpg" id="2_aoke0"]
+[ext_resource type="FontFile" uid="uid://dfkub48esobtl" path="res://Assets/Font/Swash Break Trial.otf" id="3_dpr5i"]
+
+[node name="SettingMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0w01v")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_aoke0")
+
+[node name="SettingPanel" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 192.0
+offset_top = -132.0
+offset_right = -136.0
+offset_bottom = 130.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="SettingPanel"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_dpr5i")
+theme_override_font_sizes/font_size = 24
+text = "Volume"
+horizontal_alignment = 1
+
+[node name="VolumeSlider" type="HSlider" parent="SettingPanel"]
+custom_minimum_size = Vector2(500, 50)
+layout_mode = 2
+
+[node name="FullscreenCheck" type="CheckBox" parent="SettingPanel"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+size_flags_stretch_ratio = 0.0
+theme_override_constants/outline_size = 0
+theme_override_fonts/font = ExtResource("3_dpr5i")
+theme_override_font_sizes/font_size = 24
+text = "Fullscreen"
+flat = true
+alignment = 1
+icon_alignment = 1
+
+[node name="BackButton" type="Button" parent="SettingPanel"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_dpr5i")
+theme_override_font_sizes/font_size = 24
+text = "Back"
+
+[node name="ApplyButton" type="Button" parent="SettingPanel"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_dpr5i")
+theme_override_font_sizes/font_size = 24
+text = "Apply"

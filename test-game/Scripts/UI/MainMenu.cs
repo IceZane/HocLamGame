@@ -26,7 +26,7 @@ private async void OnStartPressed()
 private void OnSettingPressed()
 {
 	GD.Print("Setting button pressed!");
-	GetTree().ChangeSceneToFile("res://Scene/Setting.tscn");
+	GetTree().ChangeSceneToFile("res://Scene/setting_menu.tscn");
 }
 
 private void OnQuitPressed()

@@ -222,6 +222,7 @@ public partial class MainCharacter : CharacterBody2D
 		if (isDead) return;
 
 		currentHP = Mathf.Max(currentHP - 1, 0);
+		isHurt = true;
 		PlayAnim("Hurt");
 		UpdateHealthBar();
 

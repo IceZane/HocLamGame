@@ -179,7 +179,7 @@ private void OnBodyExited(Node body)
 	SetPhysicsProcess(false);
 
 	// Delay xoá 0.5s để animation kịp chạy
-	GetTree().CreateTimer(3).Timeout += () =>
+	GetTree().CreateTimer(2).Timeout += () =>
 	{
 		QueueFree();
 	};
