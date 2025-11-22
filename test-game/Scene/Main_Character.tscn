@@ -1,4 +1,4 @@
-[gd_scene load_steps=85 format=3 uid="uid://biatp2d3b1nxy"]
+[gd_scene load_steps=86 format=3 uid="uid://biatp2d3b1nxy"]
 
 [ext_resource type="Script" uid="uid://b15ir3kfhfa4j" path="res://Scripts/Character/MainCharacter.cs" id="1_kwg8s"]
 [ext_resource type="Texture2D" uid="uid://c5o7mgriw2nkt" path="res://Assets/Characters/Main/Run.png" id="2_12kmu"]
@@ -554,6 +554,10 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qrtld"]
 size = Vector2(15, 22)
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mw4ht"]
+radius = 5.0
+height = 24.0
+
 [node name="CharacterBody2D" type="CharacterBody2D"]
 script = ExtResource("1_kwg8s")
 
@@ -567,6 +571,14 @@ autoplay = "default"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(1.5, 9)
 shape = SubResource("RectangleShape2D_qrtld")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, 9)
+shape = SubResource("CapsuleShape2D_mw4ht")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2, 2)

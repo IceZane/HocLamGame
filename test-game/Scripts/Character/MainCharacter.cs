@@ -4,6 +4,7 @@ using System;
 public partial class MainCharacter : CharacterBody2D
 {
 	// ====== MOVEMENT SETTINGS ======
+	private bool isClimbing = false;
 	public const float WalkSpeed = 100f;
 	public const float RunSpeed = 250f;
 	public const float JumpVelocity = -250f;
@@ -12,7 +13,6 @@ public partial class MainCharacter : CharacterBody2D
 
 	// ====== COMPONENTS ======
 	private AnimatedSprite2D anim;
-	// ====== Sound Effect =====
 	private AudioStreamPlayer2D shootSound;
 	private AudioStreamPlayer2D reloadSound;
 	private AudioStreamPlayer2D attackSound;
@@ -43,6 +43,14 @@ public partial class MainCharacter : CharacterBody2D
 
 	public override void _Ready()
 	{
+		var tileMap = GetNodeOrNull<Node>("TileMap");
+if (tileMap != null)
+{
+	foreach (Node child in tileMap.GetChildren())
+	{
+		GD.Print("TileMap child: " + child.Name + " (" + child.GetType().ToString() + ")");
+	}
+}
 		shootSound = GetNode<AudioStreamPlayer2D>("ShootSound");
 		reloadSound = GetNode<AudioStreamPlayer2D>("ReloadSound");
 		attackSound = GetNode<AudioStreamPlayer2D>("AttackSound");
@@ -56,20 +64,35 @@ public partial class MainCharacter : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
+		GD.Print("isClimbing = " + isClimbing + ", velocity.Y = " + velocity.Y);
+		// ====== Ladder check ======
+isClimbing = CheckLadder();
 
-		// Gravity
-		if (!IsOnFloor())
-		{
-			object gravityObj = ProjectSettings.GetSetting("physics/2d/default_gravity");
-			float gravity = 400f;
-			if (gravityObj is float g)
-				gravity = g;
-			velocity.Y += gravity * (float)delta;
-		}
+if (isClimbing)
+{
+	// Tắt trọng lực
+	velocity.Y = Input.GetAxis("ui_up", "ui_down") * WalkSpeed;
 
-		// Jump
-		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor() && !isDead)
-			velocity.Y = JumpVelocity;
+	// Cho phép đứng yên trên thang
+	if (Mathf.Abs(velocity.Y) < 1f)
+		velocity.Y = 0;
+}
+else
+{
+	// Gravity
+	if (!IsOnFloor())
+	{
+		object gravityObj = ProjectSettings.GetSetting("physics/2d/default_gravity");
+		float gravity = 400f;
+		if (gravityObj is float g)
+			gravity = g;
+		velocity.Y += gravity * (float)delta;
+	}
+
+	// Jump
+	if (Input.IsActionJustPressed("ui_accept") && IsOnFloor() && !isDead)
+		velocity.Y = JumpVelocity;
+}
 
 		// Run or Walk
 		float dir = Input.GetAxis("ui_left", "ui_right");
@@ -120,9 +143,13 @@ public partial class MainCharacter : CharacterBody2D
 		// =============================
 		// Movement animation
 		// =============================
-		if (!isShooting && !isAttacking && !isReloading && !isHurt && !isDead)
+		if (!isShooting && !isAttacking && !isReloading && !isDead)
 		{
-			if (!IsOnFloor())
+			if (isHurt)
+			{
+				PlayAnim("Hurt");
+			}
+			else if (!IsOnFloor())
 				PlayAnim("Jump");
 			else if (Mathf.Abs(Velocity.X) > 0 && Input.IsActionPressed("run"))
 				PlayAnim("Run");
@@ -168,7 +195,6 @@ public partial class MainCharacter : CharacterBody2D
 		{
 			if (node is ZombieEnemy zombie)
 			{
-				
 				float attackRange = 20f;
 				if (GlobalPosition.DistanceTo(zombie.GlobalPosition) <= attackRange)
 				{
@@ -193,7 +219,6 @@ public partial class MainCharacter : CharacterBody2D
 
 	private void ShootBullet()
 	{
-		
 		if (BulletScene == null)
 		{
 			GD.PrintErr("BulletScene chưa được gán trong Inspector!");
@@ -226,8 +251,20 @@ public partial class MainCharacter : CharacterBody2D
 		PlayAnim("Hurt");
 		UpdateHealthBar();
 
+		SetPhysicsProcess(false); // Tạm dừng xử lý
+
 		if (currentHP <= 0)
+		{
 			Die();
+		}
+		else
+		{
+			// Sau 0.3s bật lại xử lý
+			GetTree().CreateTimer(0.3).Timeout += () =>
+			{
+				SetPhysicsProcess(true);
+			};
+		}
 	}
 
 	public void Die()
@@ -268,4 +305,31 @@ public partial class MainCharacter : CharacterBody2D
 		bar.Frame = 0;
 		bar.Stop();
 	}
+
+	// ======================================
+	// LADDER CHECK
+	// ======================================
+	private bool CheckLadder()
+{
+	var ladderLayer = GetNodeOrNull<TileMapLayer>("TileMap/Ladder");
+	if (ladderLayer == null)
+	{
+		GD.PrintErr("Không tìm thấy node Ladder!");
+		return false;
+	}
+
+	var area = GetNodeOrNull<Area2D>("Area2D");
+	if (area == null)
+	{
+		GD.PrintErr("Không tìm thấy Area2D!");
+		return false;
+	}
+
+	Vector2 localPos = ladderLayer.ToLocal(area.GlobalPosition);
+	Vector2I cell = ladderLayer.LocalToMap(localPos);
+
+	int sourceId = ladderLayer.GetCellSourceId(cell);
+	GD.Print("Ladder check at cell " + cell + ": sourceId = " + sourceId);
+	return sourceId != -1;
+}
 }
