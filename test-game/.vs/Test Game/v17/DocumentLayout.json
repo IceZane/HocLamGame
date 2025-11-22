@@ -1,0 +1,143 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\HocLamGame\\test-game\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|d:\\hoclamgame\\test-game\\scripts\\character\\ammolabel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|solutionrelative:scripts\\character\\ammolabel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|d:\\hoclamgame\\test-game\\scripts\\character\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|solutionrelative:scripts\\character\\bullet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|d:\\hoclamgame\\test-game\\scripts\\ui\\settingmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|solutionrelative:scripts\\ui\\settingmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|d:\\hoclamgame\\test-game\\scripts\\ui\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|solutionrelative:scripts\\ui\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|d:\\hoclamgame\\test-game\\scripts\\ui\\heathbar.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|solutionrelative:scripts\\ui\\heathbar.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|d:\\hoclamgame\\test-game\\scripts\\character\\zombieenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|solutionrelative:scripts\\character\\zombieenemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|d:\\hoclamgame\\test-game\\scripts\\character\\maincharacter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B0FA87F-664A-494C-8ADF-B8C7B1D578C7}|Test Game.csproj|solutionrelative:scripts\\character\\maincharacter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SettingMenu.cs",
+              "DocumentMoniker": "D:\\HocLamGame\\test-game\\Scripts\\UI\\SettingMenu.cs",
+              "RelativeDocumentMoniker": "Scripts\\UI\\SettingMenu.cs",
+              "ToolTip": "D:\\HocLamGame\\test-game\\Scripts\\UI\\SettingMenu.cs",
+              "RelativeToolTip": "Scripts\\UI\\SettingMenu.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAAgwFQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T16:03:10.588Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainMenu.cs",
+              "DocumentMoniker": "D:\\HocLamGame\\test-game\\Scripts\\UI\\MainMenu.cs",
+              "RelativeDocumentMoniker": "Scripts\\UI\\MainMenu.cs",
+              "ToolTip": "D:\\HocLamGame\\test-game\\Scripts\\UI\\MainMenu.cs",
+              "RelativeToolTip": "Scripts\\UI\\MainMenu.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAgwCUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T16:03:06.5Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "HeathBar.cs",
+              "DocumentMoniker": "D:\\HocLamGame\\test-game\\Scripts\\UI\\HeathBar.cs",
+              "RelativeDocumentMoniker": "Scripts\\UI\\HeathBar.cs",
+              "ToolTip": "D:\\HocLamGame\\test-game\\Scripts\\UI\\HeathBar.cs",
+              "RelativeToolTip": "Scripts\\UI\\HeathBar.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAAgwDsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T16:03:00.475Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ZombieEnemy.cs",
+              "DocumentMoniker": "D:\\HocLamGame\\test-game\\Scripts\\Character\\ZombieEnemy.cs",
+              "RelativeDocumentMoniker": "Scripts\\Character\\ZombieEnemy.cs",
+              "ToolTip": "D:\\HocLamGame\\test-game\\Scripts\\Character\\ZombieEnemy.cs",
+              "RelativeToolTip": "Scripts\\Character\\ZombieEnemy.cs",
+              "ViewState": "AgIAAKMAAAAAAAAAAAAgwLwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T16:02:52.972Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MainCharacter.cs",
+              "DocumentMoniker": "D:\\HocLamGame\\test-game\\Scripts\\Character\\MainCharacter.cs",
+              "RelativeDocumentMoniker": "Scripts\\Character\\MainCharacter.cs",
+              "ToolTip": "D:\\HocLamGame\\test-game\\Scripts\\Character\\MainCharacter.cs",
+              "RelativeToolTip": "Scripts\\Character\\MainCharacter.cs",
+              "ViewState": "AgIAABsBAAAAAAAAAAAgwJ8BAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T16:00:33.764Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Bullet.cs",
+              "DocumentMoniker": "D:\\HocLamGame\\test-game\\Scripts\\Character\\Bullet.cs",
+              "RelativeDocumentMoniker": "Scripts\\Character\\Bullet.cs",
+              "ToolTip": "D:\\HocLamGame\\test-game\\Scripts\\Character\\Bullet.cs",
+              "RelativeToolTip": "Scripts\\Character\\Bullet.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAgwCcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T16:00:29.879Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AmmoLabel.cs",
+              "DocumentMoniker": "D:\\HocLamGame\\test-game\\Scripts\\Character\\AmmoLabel.cs",
+              "RelativeDocumentMoniker": "Scripts\\Character\\AmmoLabel.cs",
+              "ToolTip": "D:\\HocLamGame\\test-game\\Scripts\\Character\\AmmoLabel.cs",
+              "RelativeToolTip": "Scripts\\Character\\AmmoLabel.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAgwBsAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T16:00:22.602Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
