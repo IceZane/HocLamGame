@@ -39,10 +39,19 @@ public partial class MainCharacter : CharacterBody2D
 	// ====== HEALTH ======
 	private int currentHP = 4;
 	private const int maxHP = 4;
+	private int lives = 3; // số mạng ban đầu
+	private const int maxLives = 3;
 	public int GetHP() => currentHP;
 
 	public override void _Ready()
 	{
+		var gameOverLabel = GetNodeOrNull<Label>("../HUD/GameOver");
+	if (gameOverLabel != null)
+	{
+		gameOverLabel.Visible = false;
+	}
+	UpdateLivesUI();
+
 		var tileMap = GetNodeOrNull<Node>("TileMap");
 if (tileMap != null)
 {
@@ -64,16 +73,12 @@ if (tileMap != null)
 	public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
-		GD.Print("isClimbing = " + isClimbing + ", velocity.Y = " + velocity.Y);
 		// ====== Ladder check ======
 isClimbing = CheckLadder();
 
 if (isClimbing)
 {
-	// Tắt trọng lực
 	velocity.Y = Input.GetAxis("ui_up", "ui_down") * WalkSpeed;
-
-	// Cho phép đứng yên trên thang
 	if (Mathf.Abs(velocity.Y) < 1f)
 		velocity.Y = 0;
 }
@@ -144,20 +149,29 @@ else
 		// Movement animation
 		// =============================
 		if (!isShooting && !isAttacking && !isReloading && !isDead)
-		{
-			if (isHurt)
-			{
-				PlayAnim("Hurt");
-			}
-			else if (!IsOnFloor())
-				PlayAnim("Jump");
-			else if (Mathf.Abs(Velocity.X) > 0 && Input.IsActionPressed("run"))
-				PlayAnim("Run");
-			else if (Mathf.Abs(Velocity.X) > 10)
-				PlayAnim("Walk");
-			else
-				PlayAnim("default");
-		}
+{
+	if (isHurt)
+	{
+		PlayAnim("Hurt");
+	}
+	else if (!IsOnFloor())
+	{
+		PlayAnim("Jump");
+	}
+	else if (Mathf.Abs(Velocity.X) > 0 && Input.IsActionPressed("run"))
+	{
+		PlayAnim("Run");
+	}
+	else if (Mathf.Abs(Velocity.X) > 10)
+	{
+		PlayAnim("Walk");
+	}
+	else
+	{
+		PlayAnim("default");
+	}
+}
+
 	}
 
 	private void PlayAnim(string name)
@@ -228,7 +242,7 @@ else
 
 		Bullet bullet = BulletScene.Instantiate<Bullet>();
 
-		var muzzle = GetNode<Node2D>("GunPoint");
+		var muzzle = GetNode<Node2D>("Sprite2D/GunPoint");
 		bullet.GlobalPosition = muzzle.GlobalPosition;
 
 		bullet.Direction = FacingRight ? Vector2.Right : Vector2.Left;
@@ -243,46 +257,41 @@ else
 	// DAMAGE METHODS
 	// ======================================
 	public void TakeDamage()
+{
+	if (isDead) return;
+
+	currentHP = Mathf.Max(currentHP - 1, 0);
+	isHurt = true;
+	PlayAnim("Hurt");
+	UpdateHealthBar();
+
+	SetPhysicsProcess(false); // Tạm dừng xử lý
+
+	if (currentHP <= 0)
 	{
-		if (isDead) return;
-
-		currentHP = Mathf.Max(currentHP - 1, 0);
-		isHurt = true;
-		PlayAnim("Hurt");
-		UpdateHealthBar();
-
-		SetPhysicsProcess(false); // Tạm dừng xử lý
-
-		if (currentHP <= 0)
-		{
-			Die();
-		}
-		else
-		{
-			// Sau 0.3s bật lại xử lý
-			GetTree().CreateTimer(0.3).Timeout += () =>
-			{
-				SetPhysicsProcess(true);
-			};
-		}
+		HandleDeath(); // gọi hàm mới
 	}
+	else
+	{
+		GetTree().CreateTimer(0.3).Timeout += () =>
+		{
+			SetPhysicsProcess(true);
+		};
+	}
+}
 
 	public void Die()
-	{
-		if (isDead) return;
+{
+	if (isDead) return;
 
-		isDead = true;
-		PlayAnim("Dead");
+	isDead = true;
+	PlayAnim("Dead");
 
-		Velocity = Vector2.Zero;
-		SetPhysicsProcess(false);
+	Velocity = Vector2.Zero;
+	SetPhysicsProcess(false);
 
-		var ui = GetNodeOrNull<CanvasLayer>("../HUD");
-		if (ui != null)
-			ui.Visible = false;
-
-		GD.Print("Player has died.");
-	}
+	GD.Print("Player has died.");
+}
 
 	private void UpdateHealthBar()
 	{
@@ -311,25 +320,103 @@ else
 	// ======================================
 	private bool CheckLadder()
 {
-	var ladderLayer = GetNodeOrNull<TileMapLayer>("TileMap/Ladder");
-	if (ladderLayer == null)
+	var ray = GetNodeOrNull<RayCast2D>("LadderRayCast");
+	if (ray == null)
 	{
-		GD.PrintErr("Không tìm thấy node Ladder!");
+		GD.PrintErr("Không tìm thấy LadderRayCast!");
 		return false;
 	}
 
-	var area = GetNodeOrNull<Area2D>("Area2D");
-	if (area == null)
+	// Nếu ray va chạm với tile thang (layer 2), trả về true
+	return ray.IsColliding();
+}
+private void LoseLife()
+{
+	lives--;
+
+	UpdateLivesUI();
+
+	if (lives > 0)
 	{
-		GD.PrintErr("Không tìm thấy Area2D!");
-		return false;
+		// Reset HP và hồi sinh
+		currentHP = maxHP;
+		Respawn();
+	}
+	else
+	{
+		GameOver();
+	}
+}
+private void UpdateLivesUI()
+{
+	var lifeCountLabel = GetNodeOrNull<Label>("../HUD/LifeCount");
+	if (lifeCountLabel != null)
+	{
+		lifeCountLabel.Text = "x" + lives;
+	}
+}
+private void GameOver()
+{
+	GD.Print("Game Over!");
+
+	var gameOverLabel = GetNodeOrNull<Label>("../HUD/GameOver");
+	if (gameOverLabel != null)
+	{
+		gameOverLabel.Visible = true;
+		gameOverLabel.Text = "GAME OVER";
 	}
 
-	Vector2 localPos = ladderLayer.ToLocal(area.GlobalPosition);
-	Vector2I cell = ladderLayer.LocalToMap(localPos);
+	// Sau vài giây quay về Menu
+	GetTree().CreateTimer(3.0).Timeout += () =>
+	{
+		GetTree().ChangeSceneToFile("res://Scene/main_menu.tscn");
+	};
+}
+private void Respawn()
+{
+	currentHP = maxHP;
+	Velocity = Vector2.Zero;
 
-	int sourceId = ladderLayer.GetCellSourceId(cell);
-	GD.Print("Ladder check at cell " + cell + ": sourceId = " + sourceId);
-	return sourceId != -1;
+	var spawnPoint = GetNodeOrNull<Marker2D>("../SpawnPoint");
+	if (spawnPoint != null)
+	{
+		GlobalPosition = spawnPoint.GlobalPosition;
+	}
+	else
+	{
+		GD.PrintErr("Không tìm thấy SpawnPoint!");
+		GlobalPosition = new Vector2(100, 100);
+	}
+
+	SetPhysicsProcess(true);
+	isDead = false; // reset trạng thái chết
+
+	GD.Print("Player respawned. Lives: " + lives + ", HP reset to " + currentHP);
+}
+private void HandleDeath()
+{
+	if (isDead) return;
+
+	isDead = true;
+	PlayAnim("Dead");
+	Velocity = Vector2.Zero;
+	SetPhysicsProcess(false);
+
+	// Sau 3 giây mới xử lý tiếp
+	GetTree().CreateTimer(3.0).Timeout += () =>
+	{
+		lives--;
+		UpdateLivesUI();
+
+		if (lives > 0)
+		{
+			currentHP = maxHP;
+			Respawn();
+		}
+		else
+		{
+			GameOver();
+		}
+	};
 }
 }

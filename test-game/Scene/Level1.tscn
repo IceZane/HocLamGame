@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=4 uid="uid://dkppb1dtdexow"]
+[gd_scene load_steps=27 format=4 uid="uid://dkppb1dtdexow"]
 
 [ext_resource type="Texture2D" uid="uid://c77jxr0cak6c6" path="res://Assets/Background/Base Color.png" id="1_ofx4i"]
 [ext_resource type="Texture2D" uid="uid://cq3nibry26pxl" path="res://Assets/Tilemap/Tiles.png" id="2_lfbnc"]
@@ -11,6 +11,8 @@
 [ext_resource type="Script" uid="uid://dh84jbc7olk1r" path="res://Scripts/UI/HeathBar.cs" id="7_xj5bp"]
 [ext_resource type="PackedScene" uid="uid://dgteyrwg2hljh" path="res://Scene/zombie_enemy.tscn" id="8_7ynka"]
 [ext_resource type="Script" uid="uid://ceqhldgkd0g02" path="res://Scripts/Character/ZombieEnemy.cs" id="9_hjmnv"]
+[ext_resource type="Texture2D" uid="uid://bje5iobxjhkq1" path="res://Assets/Characters/UI/basic life bars a icons .png" id="10_cu1y2"]
+[ext_resource type="FontFile" uid="uid://dfkub48esobtl" path="res://Assets/Font/Swash Break Trial.otf" id="11_xb73i"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r0du0"]
 texture = ExtResource("2_lfbnc")
@@ -122,7 +124,6 @@ sources/0 = SubResource("TileSetAtlasSource_r0du0")
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d8c13"]
 texture = ExtResource("3_8m71o")
 texture_region_size = Vector2i(14, 16)
-use_texture_padding = false
 0:0/0 = 0
 0:0/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 0:1/0 = 0
@@ -139,14 +140,14 @@ use_texture_padding = false
 0:6/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 0:7/0 = 0
 0:7/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
-1:3/0 = 0
-1:3/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:0/0 = 0
 1:0/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:1/0 = 0
 1:1/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:2/0 = 0
 1:2/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:3/0 = 0
+1:3/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:4/0 = 0
 1:4/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:5/0 = 0
@@ -225,6 +226,21 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_xj5bp"]
+atlas = ExtResource("10_cu1y2")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hjmnv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xj5bp")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="Node" type="Node"]
 
 [node name="TextureRect" type="TextureRect" parent="."]
@@ -252,38 +268,72 @@ tile_set = SubResource("TileSet_cm0pq")
 sprite_frames = SubResource("SpriteFrames_7ynka")
 
 [node name="Ladder" type="TileMapLayer" parent="TileMap"]
-tile_map_data = PackedByteArray("AAA0ABYAAAAAAAAAAAA1ABYAAAABAAAAAAA0ABcAAAAAAAEAAAA0ABgAAAAAAAIAAAA0ABkAAAAAAAMAAAA0ABoAAAAAAAEAAAA0ABsAAAAAAAIAAAA0ABwAAAAAAAMAAAA1ABcAAAABAAEAAAA1ABgAAAABAAIAAAA1ABkAAAABAAMAAAA1ABoAAAABAAEAAAA1ABsAAAABAAIAAAA1ABwAAAABAAMAAAA0AB0AAAAAAAQAAAA0AB4AAAAAAAUAAAA0AB8AAAAAAAYAAAA1AB0AAAABAAQAAAA1AB4AAAABAAUAAAA1AB8AAAABAAYAAAA0ACAAAAAAAAcAAAA1ACAAAAABAAcAAAA=")
+tile_map_data = PackedByteArray("AAA0ABYAAAAAAAAAAAA1ABYAAAABAAAAAAA0ABcAAAAAAAEAAAA0ABgAAAAAAAIAAAA0ABkAAAAAAAMAAAA1ABcAAAABAAEAAAA1ABgAAAABAAIAAAA1ABkAAAABAAMAAAA0ABoAAAAAAAEAAAA0ABsAAAAAAAIAAAA0ABwAAAAAAAMAAAA1ABoAAAABAAEAAAA1ABsAAAABAAIAAAA1ABwAAAABAAMAAAA0AB0AAAAAAAEAAAA0AB4AAAAAAAIAAAA0AB8AAAAAAAMAAAA1AB0AAAABAAEAAAA1AB4AAAABAAIAAAA1AB8AAAABAAMAAAA0ACAAAAAAAAcAAAA1ACAAAAABAAcAAAA0ABUAAAAAAAcAAAA1ABUAAAABAAcAAAA0ABQAAAAAAAcAAAA1ABQAAAABAAcAAAA=")
 tile_set = SubResource("TileSet_8m71o")
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("3_d8c13")]
-position = Vector2(41, 492)
+position = Vector2(36, 611)
 BulletScene = ExtResource("4_8m71o")
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
 [node name="AmmoLabel" type="Label" parent="HUD"]
-offset_left = 20.0
-offset_top = 59.0
-offset_right = 242.0
-offset_bottom = 127.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -222.0
+offset_bottom = 68.0
+grow_horizontal = 0
 theme_override_fonts/font = ExtResource("5_lfbnc")
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 28
 script = ExtResource("5_cu1y2")
 PlayerPath = NodePath("../../CharacterBody2D")
 
 [node name="HeathBar" type="AnimatedSprite2D" parent="HUD"]
-position = Vector2(139, 36.000015)
+position = Vector2(133, 34)
 scale = Vector2(4.9375, 3.8125)
 sprite_frames = SubResource("SpriteFrames_c6i3y")
 animation = &"Full HP"
 script = ExtResource("7_xj5bp")
+
+[node name="Life" type="AnimatedSprite2D" parent="HUD"]
+position = Vector2(61, 67)
+scale = Vector2(1.7656249, 1.921875)
+sprite_frames = SubResource("SpriteFrames_hjmnv")
+
+[node name="LifeCount" type="Label" parent="HUD"]
+offset_left = 74.0
+offset_top = 59.0
+offset_right = 114.0
+offset_bottom = 82.0
+theme_override_fonts/font = ExtResource("5_lfbnc")
+theme_override_font_sizes/font_size = 21
+
+[node name="GameOver" type="Label" parent="HUD"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.5
+offset_top = -45.0
+offset_right = 180.5
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("11_xb73i")
+theme_override_font_sizes/font_size = 67
+text = "GAME OVER"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ZombieEnemy" parent="." instance=ExtResource("8_7ynka")]
 position = Vector2(451, 492)
 script = ExtResource("9_hjmnv")
 
 [node name="Bullet" parent="." instance=ExtResource("4_8m71o")]
-position = Vector2(52, 502)
+position = Vector2(54, 651)
 
 [node name="ZombieEnemy2" parent="." instance=ExtResource("8_7ynka")]
 position = Vector2(633, 429)
@@ -292,3 +342,6 @@ script = ExtResource("9_hjmnv")
 [node name="ZombieEnemy3" parent="." instance=ExtResource("8_7ynka")]
 position = Vector2(910, 498)
 script = ExtResource("9_hjmnv")
+
+[node name="SpawnPoint" type="Marker2D" parent="."]
+position = Vector2(35, 613)
