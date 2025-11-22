@@ -581,7 +581,7 @@ script = ExtResource("1_kwg8s")
 position = Vector2(1, 3)
 scale = Vector2(0.276985, 0.26284802)
 sprite_frames = SubResource("SpriteFrames_85ica")
-animation = &"Walk"
+animation = &"Shooting"
 autoplay = "default"
 
 [node name="GunPoint" type="Node2D" parent="Sprite2D"]

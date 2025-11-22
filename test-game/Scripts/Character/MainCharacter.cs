@@ -110,6 +110,9 @@ else
 		{
 			anim.FlipH = dir < 0;
 			FacingRight = dir > 0;
+
+			var gunPoint = GetNode<Node2D>("Sprite2D/GunPoint");
+			gunPoint.Position = new Vector2(FacingRight ? +22.485f : -22.485f, gunPoint.Position.Y);
 		}
 
 		Velocity = velocity;
