@@ -17,7 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GameState="*res://Scripts/UI/GameState.cs"
+GameState="res://Scripts/UI/GameState.cs"
+Transition="res://Scene/transition.tscn"
 
 [dotnet]
 

@@ -29,9 +29,9 @@ public partial class MainCharacter : CharacterBody2D
 	private bool isDead = false;
 
 	// ====== AMMO ======
-	public const int Capacity = 30;
-	private int currentAmmo = 30;
-	private int maxAmmo = 120;
+	public const int Capacity = 12;
+	private int currentAmmo = 12;
+	private int maxAmmo = 36;
 
 	public int CurrentAmmo => currentAmmo;
 	public int MaxAmmo => maxAmmo;
@@ -47,6 +47,7 @@ public partial class MainCharacter : CharacterBody2D
 
 	public override void _Ready()
 	{
+
 		var camera = GetNodeOrNull<Camera2D>("../CharacterBody2D/Camera2D");
 		var tileMapLayer = GetNodeOrNull<TileMapLayer>("../TileMap/TileMapLayer");
 

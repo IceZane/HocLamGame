@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cxlwhmea1jt1t"]
+[gd_scene load_steps=5 format=3 uid="uid://cxlwhmea1jt1t"]
 
 [ext_resource type="Script" uid="uid://c5dmdoy45sr3g" path="res://Scripts/UI/MainMenu.cs" id="1_87ipw"]
 [ext_resource type="Texture2D" uid="uid://bsyrb6m2l6hst" path="res://Assets/Characters/UI/HD-wallpaper-video-game-guns-gore-and-cannoli-2.jpg" id="1_ftydy"]
 [ext_resource type="FontFile" uid="uid://dfkub48esobtl" path="res://Assets/Font/Swash Break Trial.otf" id="3_hii65"]
+[ext_resource type="PackedScene" uid="uid://dmwso7er2c1k5" path="res://Scene/transition.tscn" id="4_kqsxi"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -41,6 +42,9 @@ theme_override_font_sizes/font_size = 72
 text = "PROJECT ZM"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Transition" parent="." instance=ExtResource("4_kqsxi")]
+visible = false
 
 [node name="ButtonPanel" type="VBoxContainer" parent="."]
 layout_mode = 1

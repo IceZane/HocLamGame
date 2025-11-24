@@ -1,0 +1,78 @@
+[gd_scene load_steps=8 format=3 uid="uid://dmwso7er2c1k5"]
+
+[ext_resource type="Script" uid="uid://dxipgaunx0a5a" path="res://Scripts/UI/Transition.cs" id="1_50xx0"]
+[ext_resource type="Shader" uid="uid://4ciyievurs01" path="res://Scripts/Transition.gdshader" id="2_yef7t"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_50xx0"]
+shader = ExtResource("2_yef7t")
+shader_parameter/progress = 0.0
+
+[sub_resource type="Animation" id="Animation_yef7t"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:material:shader_parameter/progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_kyhou"]
+resource_name = "Transition"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:material:shader_parameter/progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+
+[sub_resource type="Animation" id="Animation_50xx0"]
+resource_name = "Transition_out"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:material:shader_parameter/progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2ff4e"]
+_data = {
+&"RESET": SubResource("Animation_yef7t"),
+&"Transition": SubResource("Animation_kyhou"),
+&"Transition_out": SubResource("Animation_50xx0")
+}
+
+[node name="Transition" type="CanvasLayer"]
+script = ExtResource("1_50xx0")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_50xx0")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_2ff4e")
+}
+autoplay = "Transition"
