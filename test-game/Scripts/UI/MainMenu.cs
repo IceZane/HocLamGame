@@ -19,7 +19,7 @@ public partial class MainMenu : Control
 	{
 		GD.Print("Start button pressed!");
 		loadingLabel.Visible = true;
-		await ToSignal(GetTree().CreateTimer(3.0f), "timeout");
+		await ToSignal(GetTree().CreateTimer(2.0f), "timeout");
 		var transition = GetNode<Transition>("/root/Transition");
 		await transition.PlayIn(); // chỉ chạy Transition_in
 
