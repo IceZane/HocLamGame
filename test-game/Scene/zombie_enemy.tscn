@@ -248,7 +248,7 @@ animations = [{
 size = Vector2(9, 19)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_du52s"]
-radius = 63.126858
+radius = 36.013885
 
 [node name="ZombieEnemy" type="CharacterBody2D"]
 collision_mask = 3
@@ -268,3 +268,16 @@ shape = SubResource("RectangleShape2D_x1kwv")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(-9, 13)
 shape = SubResource("CircleShape2D_du52s")
+
+[node name="RayDownRight" type="RayCast2D" parent="."]
+
+[node name="RayDownLeft" type="RayCast2D" parent="."]
+position = Vector2(-9, 0)
+
+[node name="RayForwardLeft" type="RayCast2D" parent="."]
+position = Vector2(-3, 15)
+target_position = Vector2(-11, 0)
+
+[node name="RayForwardRight" type="RayCast2D" parent="."]
+position = Vector2(-4, 15)
+target_position = Vector2(10, 0)

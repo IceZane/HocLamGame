@@ -3,423 +3,473 @@ using System;
 
 public partial class MainCharacter : CharacterBody2D
 {
-    // ====== MOVEMENT SETTINGS ======
-    private bool isClimbing = false;
-    public const float WalkSpeed = 100f;
-    public const float RunSpeed = 250f;
-    public const float JumpVelocity = -250f;
+	// ====== MOVEMENT SETTINGS ======
+	private bool isClimbing = false;
+	public const float WalkSpeed = 50f;
+	public const float RunSpeed = 150f;
+	public const float JumpVelocity = -200f;
+	private int jumpCount = 0;
+	private int maxJumpCount = 2; // nhảy tối đa 2 lần
 
-    private float currentSpeed = WalkSpeed;
+	private float currentSpeed = WalkSpeed;
 
-    // ====== COMPONENTS ======
-    private AnimatedSprite2D anim;
-    private AudioStreamPlayer2D shootSound;
-    private AudioStreamPlayer2D reloadSound;
-    private AudioStreamPlayer2D attackSound;
-    private AudioStreamPlayer2D hitZombieSound;
+	// ====== COMPONENTS ======
+	private AnimatedSprite2D anim;
+	private AudioStreamPlayer2D shootSound;
+	private AudioStreamPlayer2D reloadSound;
+	private AudioStreamPlayer2D attackSound;
+	private AudioStreamPlayer2D hitZombieSound;
 
-    // ====== STATE FLAGS ======
-    private bool FacingRight = true;
-    private bool isAttacking = false;
-    private bool isReloading = false;
-    private bool isShooting = false;
-    private bool isHurt = false;
-    private bool isDead = false;
+	// ====== STATE FLAGS ======
+	private bool FacingRight = true;
+	private bool isAttacking = false;
+	private bool isReloading = false;
+	private bool isShooting = false;
+	private bool isHurt = false;
+	private bool isDead = false;
 
-    // ====== AMMO ======
-    public const int Capacity = 30;
-    private int currentAmmo = 30;
-    private int maxAmmo = 120;
+	// ====== AMMO ======
+	public const int Capacity = 30;
+	private int currentAmmo = 30;
+	private int maxAmmo = 120;
 
-    public int CurrentAmmo => currentAmmo;
-    public int MaxAmmo => maxAmmo;
+	public int CurrentAmmo => currentAmmo;
+	public int MaxAmmo => maxAmmo;
 
-    [Export] public PackedScene BulletScene;
+	[Export] public PackedScene BulletScene;
 
-    // ====== HEALTH ======
-    private int currentHP = 4;
-    private const int maxHP = 4;
-    private int lives = 3; // số mạng ban đầu
-    private const int maxLives = 3;
-    public int GetHP() => currentHP;
+	// ====== HEALTH ======
+	private int currentHP = 4;
+	private const int maxHP = 4;
+	private int lives = 3; // số mạng ban đầu
+	private const int maxLives = 3;
+	public int GetHP() => currentHP;
 
-    public override void _Ready()
-    {
-        var gameOverLabel = GetNodeOrNull<Label>("../HUD/GameOver");
-        if (gameOverLabel != null)
-        {
-            gameOverLabel.Visible = false;
-        }
-        UpdateLivesUI();
+	public override void _Ready()
+	{
+		var camera = GetNodeOrNull<Camera2D>("../CharacterBody2D/Camera2D");
+		var tileMapLayer = GetNodeOrNull<TileMapLayer>("../TileMap/TileMapLayer");
 
-        var tileMap = GetNodeOrNull<Node>("TileMap");
-        if (tileMap != null)
-        {
-            foreach (Node child in tileMap.GetChildren())
-            {
-                GD.Print("TileMap child: " + child.Name + " (" + child.GetType().ToString() + ")");
-            }
-        }
-        shootSound = GetNode<AudioStreamPlayer2D>("ShootSound");
-        reloadSound = GetNode<AudioStreamPlayer2D>("ReloadSound");
-        attackSound = GetNode<AudioStreamPlayer2D>("AttackSound");
-        hitZombieSound = GetNode<AudioStreamPlayer2D>("HitZombieSound");
-        anim = GetNode<AnimatedSprite2D>("Sprite2D");
-        AddToGroup("player");
+		if (camera == null || tileMapLayer == null)
+		{
+			GD.PrintErr("Không tìm thấy Camera2D hoặc TileMapLayer!");
+			return;
+		}
 
-        anim.AnimationFinished += OnAnimationFinished;
-    }
+		var usedRect = tileMapLayer.GetUsedRect();
+		var cellSize = tileMapLayer.TileSet.TileSize;
 
-    public override void _PhysicsProcess(double delta)
-    {
-        Vector2 velocity = Velocity;
-        // ====== Ladder check ======
-        isClimbing = CheckLadder();
+		camera.LimitLeft = (int)(usedRect.Position.X * cellSize.X);
+		camera.LimitTop = (int)(usedRect.Position.Y * cellSize.Y);
+		camera.LimitRight = (int)((usedRect.Position.X + usedRect.Size.X) * cellSize.X);
+		camera.LimitBottom = (int)((usedRect.Position.Y + usedRect.Size.Y) * cellSize.Y);
 
-        if (isClimbing)
-        {
-            velocity.Y = Input.GetAxis("ui_up", "ui_down") * WalkSpeed;
-            if (Mathf.Abs(velocity.Y) < 1f)
-                velocity.Y = 0;
-        }
-        else
-        {
-            // Gravity
-            if (!IsOnFloor())
-            {
-                object gravityObj = ProjectSettings.GetSetting("physics/2d/default_gravity");
-                float gravity = 400f;
-                if (gravityObj is float g)
-                    gravity = g;
-                velocity.Y += gravity * (float)delta;
-            }
+		GD.Print($"Camera limits set: L={camera.LimitLeft}, R={camera.LimitRight}, T={camera.LimitTop}, B={camera.LimitBottom}");
 
-            // Jump
-            if (Input.IsActionJustPressed("ui_accept") && IsOnFloor() && !isDead)
-                velocity.Y = JumpVelocity;
-        }
+		var gameOverLabel = GetNodeOrNull<Label>("../HUD/GameOver");
+		if (gameOverLabel != null)
+		{
+			gameOverLabel.Visible = false;
+		}
+		UpdateLivesUI();
 
-        // Run or Walk
-        float dir = Input.GetAxis("ui_left", "ui_right");
-        bool running = Input.IsActionPressed("run");
-        currentSpeed = running ? RunSpeed : WalkSpeed;
-        velocity.X = dir * currentSpeed;
+		var tileMap = GetNodeOrNull<Node>("TileMap");
+		if (tileMap != null)
+		{
+			foreach (Node child in tileMap.GetChildren())
+			{
+				GD.Print("TileMap child: " + child.Name + " (" + child.GetType().ToString() + ")");
+			}
+		}
+		shootSound = GetNode<AudioStreamPlayer2D>("ShootSound");
+		reloadSound = GetNode<AudioStreamPlayer2D>("ReloadSound");
+		attackSound = GetNode<AudioStreamPlayer2D>("AttackSound");
+		hitZombieSound = GetNode<AudioStreamPlayer2D>("HitZombieSound");
+		anim = GetNode<AnimatedSprite2D>("Sprite2D");
+		
 
-        // Flip sprite + cập nhật FacingRight
-        if (dir != 0)
-        {
-            anim.FlipH = dir < 0;
-            FacingRight = dir > 0;
+		anim.AnimationFinished += OnAnimationFinished;
+		AddToGroup("player");
+	}
+	public override void _Process(double delta)
+{
+	if (Input.IsActionJustPressed("ui_cancel"))
+	{
+		var pauseMenu = GetTree().Root.GetNode<PauseMenu>("Node/HUD/PauseMenu");
 
-            var gunPoint = GetNode<Node2D>("Sprite2D/GunPoint");
-            gunPoint.Position = new Vector2(FacingRight ? +22.485f : -22.485f, gunPoint.Position.Y);
-        }
+		if (!GetTree().Paused)
+		{
+			GetTree().Paused = true;
+			pauseMenu.Visible = true;
+		}
+		else
+		{
+			GetTree().Paused = false;
+			pauseMenu.Visible = false;
+		}
+	}
+}
 
-        Velocity = velocity;
-        MoveAndSlide();
+	public override void _PhysicsProcess(double delta)
+	{
+		Vector2 velocity = Velocity;
+		// ====== Ladder check ======
+		isClimbing = CheckLadder();
 
-        // =============================
-        // Combat input
-        // =============================
-        if (!isDead && !isShooting && !isAttacking && !isReloading)
-        {
-            if (Input.IsActionJustPressed("shoot") && currentAmmo > 0)
-            {
-                isShooting = true;
-                ShootBullet();
-                PlayAnim("Shooting");
-                return;
-            }
+		if (isClimbing)
+		{
+			velocity.Y = Input.GetAxis("ui_up", "ui_down") * WalkSpeed;
+			if (Mathf.Abs(velocity.Y) < 1f)
+				velocity.Y = 0;
+		}
+		else
+		{
+			// Gravity
+			if (!IsOnFloor())
+			{
+				object gravityObj = ProjectSettings.GetSetting("physics/2d/default_gravity");
+				float gravity = 400f;
+				if (gravityObj is float g)
+					gravity = g;
+				velocity.Y += gravity * (float)delta;
+			}
 
-            if (Input.IsActionJustPressed("attack"))
-            {
-                isAttacking = true;
-                DoAttack();
-                PlayAnim("Attack");
-                return;
-            }
+			// Jump
+			if (Input.IsActionJustPressed("ui_accept") && jumpCount < maxJumpCount && !isDead)
+			{
+				velocity.Y = JumpVelocity;
+				jumpCount++;
 
-            if (Input.IsActionJustPressed("reload"))
-            {
-                isReloading = true;
-                DoReload();
-                PlayAnim("Reload");
-                return;
-            }
-        }
+				anim.Stop();
+				anim.Play("Jump");
+ 				// ✅ chạy animation mỗi lần nhảy
+			}
+		}
 
-        // =============================
-        // Movement animation
-        // =============================
-        if (!isShooting && !isAttacking && !isReloading && !isDead)
-        {
-            if (isHurt)
-            {
-                PlayAnim("Hurt");
-            }
-            else if (!IsOnFloor())
-            {
-                PlayAnim("Jump");
-            }
-            else if (Mathf.Abs(Velocity.X) > 0 && Input.IsActionPressed("run"))
-            {
-                PlayAnim("Run");
-            }
-            else if (Mathf.Abs(Velocity.X) > 10)
-            {
-                PlayAnim("Walk");
-            }
-            else
-            {
-                PlayAnim("default");
-            }
-        }
+		// Run or Walk
+		float dir = Input.GetAxis("ui_left", "ui_right");
+		bool running = Input.IsActionPressed("run");
+		currentSpeed = running ? RunSpeed : WalkSpeed;
+		velocity.X = dir * currentSpeed;
 
-    }
+		// Flip sprite + cập nhật FacingRight
+		if (dir != 0)
+		{
+			anim.FlipH = dir < 0;
+			FacingRight = dir > 0;
 
-    private void PlayAnim(string name)
-    {
-        if (anim == null) return;
+			var gunPoint = GetNode<Node2D>("Sprite2D/GunPoint");
+			gunPoint.Position = new Vector2(FacingRight ? +22.485f : -22.485f, gunPoint.Position.Y);
+		}
 
-        if (anim.Animation != name)
-        {
-            try { anim.Play(name); }
-            catch { GD.PrintErr($"Animation '{name}' does not exist!"); }
-        }
-    }
+		Velocity = velocity;
+		MoveAndSlide();
+		if (IsOnFloor())
+			jumpCount = 0;
 
-    private void OnAnimationFinished()
-    {
-        switch (anim.Animation)
-        {
-            case "Shooting": isShooting = false; PlayAnim("default"); break;
-            case "Attack": isAttacking = false; PlayAnim("default"); break;
-            case "Reload": isReloading = false; PlayAnim("default"); break;
-            case "Hurt": isHurt = false; PlayAnim("default"); break;
-            case "Dead": break;
-        }
-    }
+		// =============================
+		// Combat input
+		// =============================
+		if (!isDead && !isShooting && !isAttacking && !isReloading)
+		{
+			if (Input.IsActionJustPressed("shoot") && currentAmmo > 0)
+			{
+				isShooting = true;
+				ShootBullet();
+				PlayAnim("Shooting");
+				return;
+			}
 
-    // ======================================
-    // COMBAT METHODS
-    // ======================================
-    private void DoAttack()
-    {
-        GD.Print("Attack executed!");
-        attackSound?.Play();
-        var zombies = GetTree().GetNodesInGroup("zombie");
-        foreach (var node in zombies)
-        {
-            if (node is ZombieEnemy zombie)
-            {
-                float attackRange = 20f;
-                if (GlobalPosition.DistanceTo(zombie.GlobalPosition) <= attackRange)
-                {
-                    zombie.TakeDamage(1);
-                    hitZombieSound?.Play();
-                    GD.Print("Hit zombie!");
-                }
-            }
-        }
-    }
+			if (Input.IsActionJustPressed("attack"))
+			{
+				isAttacking = true;
+				DoAttack();
+				PlayAnim("Attack");
+				return;
+			}
 
-    public void DoReload()
-    {
-        reloadSound?.Play();
-        int missingAmmo = Capacity - currentAmmo;
-        int ammoToLoad = Mathf.Min(missingAmmo, maxAmmo);
-        currentAmmo += ammoToLoad;
-        maxAmmo -= ammoToLoad;
+			if (Input.IsActionJustPressed("reload"))
+			{
+				isReloading = true;
+				DoReload();
+				PlayAnim("Reload");
+				return;
+			}
+		}
 
-        GD.Print($"Reload executed! CurrentAmmo: {currentAmmo}, MaxAmmo: {maxAmmo}");
-    }
+		// =============================
+		// Movement animation
+		// =============================
+		if (!isShooting && !isAttacking && !isReloading && !isDead)
+		{
+			if (isHurt)
+			{
+				PlayAnim("Hurt");
+			}
+			else if (!IsOnFloor())
+			{
+				PlayAnim("Jump");
+			}
+			else if (Mathf.Abs(Velocity.X) > 0 && Input.IsActionPressed("run"))
+			{
+				PlayAnim("Run");
+			}
+			else if (Mathf.Abs(Velocity.X) > 10)
+			{
+				PlayAnim("Walk");
+			}
+			else
+			{
+				PlayAnim("default");
+			}
+		}
 
-    private void ShootBullet()
-    {
-        if (BulletScene == null)
-        {
-            GD.PrintErr("BulletScene chưa được gán trong Inspector!");
-            return;
-        }
-        shootSound?.Play();
+	}
 
-        Bullet bullet = BulletScene.Instantiate<Bullet>();
+	private void PlayAnim(string name)
+	{
+		if (anim == null) return;
 
-        var muzzle = GetNode<Node2D>("Sprite2D/GunPoint");
-        bullet.GlobalPosition = muzzle.GlobalPosition;
+		if (anim.Animation != name)
+		{
+			try { anim.Play(name); }
+			catch { GD.PrintErr($"Animation '{name}' does not exist!"); }
+		}
+	}
 
-        bullet.Direction = FacingRight ? Vector2.Right : Vector2.Left;
+	private void OnAnimationFinished()
+	{
+		switch (anim.Animation)
+		{
+			case "Shooting": isShooting = false; PlayAnim("default"); break;
+			case "Attack": isAttacking = false; PlayAnim("default"); break;
+			case "Reload": isReloading = false; PlayAnim("default"); break;
+			case "Hurt": isHurt = false; PlayAnim("default"); break;
+			case "Dead": break;
+		}
+	}
 
-        GetParent().AddChild(bullet);
+	// ======================================
+	// COMBAT METHODS
+	// ======================================
+	private void DoAttack()
+	{
+		GD.Print("Attack executed!");
+		attackSound?.Play();
+		var zombies = GetTree().GetNodesInGroup("zombie");
+		foreach (var node in zombies)
+		{
+			if (node is ZombieEnemy zombie)
+			{
+				float attackRange = 20f;
+				if (GlobalPosition.DistanceTo(zombie.GlobalPosition) <= attackRange)
+				{
+					zombie.TakeDamage(1);
+					hitZombieSound?.Play();
+					GD.Print("Hit zombie!");
+				}
+			}
+		}
+	}
 
-        currentAmmo--;
-        GD.Print("Shoot executed! Ammo left: " + currentAmmo);
-    }
+	public void DoReload()
+	{
+		reloadSound?.Play();
+		int missingAmmo = Capacity - currentAmmo;
+		int ammoToLoad = Mathf.Min(missingAmmo, maxAmmo);
+		currentAmmo += ammoToLoad;
+		maxAmmo -= ammoToLoad;
 
-    // ======================================
-    // DAMAGE METHODS
-    // ======================================
-    public void TakeDamage()
-    {
-        if (isDead) return;
+		GD.Print($"Reload executed! CurrentAmmo: {currentAmmo}, MaxAmmo: {maxAmmo}");
+	}
 
-        currentHP = Mathf.Max(currentHP - 1, 0);
-        isHurt = true;
-        PlayAnim("Hurt");
-        UpdateHealthBar();
+	private void ShootBullet()
+	{
+		if (BulletScene == null)
+		{
+			GD.PrintErr("BulletScene chưa được gán trong Inspector!");
+			return;
+		}
+		shootSound?.Play();
 
-        SetPhysicsProcess(false); // Tạm dừng xử lý
+		Bullet bullet = BulletScene.Instantiate<Bullet>();
 
-        if (currentHP <= 0)
-        {
-            HandleDeath(); // gọi hàm mới
-        }
-        else
-        {
-            GetTree().CreateTimer(0.3).Timeout += () =>
-            {
-                SetPhysicsProcess(true);
-            };
-        }
-    }
+		var muzzle = GetNode<Node2D>("Sprite2D/GunPoint");
+		bullet.GlobalPosition = muzzle.GlobalPosition;
 
-    public void Die()
-    {
-        if (isDead) return;
+		bullet.Direction = FacingRight ? Vector2.Right : Vector2.Left;
 
-        isDead = true;
-        PlayAnim("Dead");
+		GetParent().AddChild(bullet);
 
-        Velocity = Vector2.Zero;
-        SetPhysicsProcess(false);
+		currentAmmo--;
+		GD.Print("Shoot executed! Ammo left: " + currentAmmo);
+	}
 
-        GD.Print("Player has died.");
-    }
+	// ======================================
+	// DAMAGE METHODS
+	// ======================================
+	public void TakeDamage()
+	{
+		if (isDead) return;
 
-    private void UpdateHealthBar()
-    {
-        var healthBars = GetTree().GetNodesInGroup("healthbar");
-        if (healthBars.Count == 0) return;
+		currentHP = Mathf.Max(currentHP - 1, 0);
+		isHurt = true;
+		PlayAnim("Hurt");
+		UpdateHealthBar();
 
-        var bar = healthBars[0] as AnimatedSprite2D;
+		SetPhysicsProcess(false); // Tạm dừng xử lý
 
-        string animName = currentHP switch
-        {
-            0 => "0 HP",
-            1 => "1 HP",
-            2 => "2 HP",
-            3 => "3 HP",
-            4 => "Full HP",
-            _ => "0 HP"
-        };
+		if (currentHP <= 0)
+		{
+			HandleDeath(); // gọi hàm mới
+		}
+		else
+		{
+			GetTree().CreateTimer(0.3).Timeout += () =>
+			{
+				SetPhysicsProcess(true);
+			};
+		}
+	}
 
-        bar.Animation = animName;
-        bar.Frame = 0;
-        bar.Stop();
-    }
+	public void Die()
+	{
+		if (isDead) return;
 
-    // ======================================
-    // LADDER CHECK
-    // ======================================
-    private bool CheckLadder()
-    {
-        var ray = GetNodeOrNull<RayCast2D>("LadderRayCast");
-        if (ray == null)
-        {
-            GD.PrintErr("Không tìm thấy LadderRayCast!");
-            return false;
-        }
+		isDead = true;
+		PlayAnim("Dead");
 
-        // Nếu ray va chạm với tile thang (layer 2), trả về true
-        return ray.IsColliding();
-    }
-    private void LoseLife()
-    {
-        lives--;
+		Velocity = Vector2.Zero;
+		SetPhysicsProcess(false);
 
-        UpdateLivesUI();
+		GD.Print("Player has died.");
+	}
 
-        if (lives > 0)
-        {
-            // Reset HP và hồi sinh
-            currentHP = maxHP;
-            Respawn();
-        }
-        else
-        {
-            GameOver();
-        }
-    }
-    private void UpdateLivesUI()
-    {
-        var lifeCountLabel = GetNodeOrNull<Label>("../HUD/LifeCount");
-        if (lifeCountLabel != null)
-        {
-            lifeCountLabel.Text = "x" + lives;
-        }
-    }
-    private void GameOver()
-    {
-        GD.Print("Game Over!");
 
-        var gameOverLabel = GetNodeOrNull<Label>("../HUD/GameOver");
-        if (gameOverLabel != null)
-        {
-            gameOverLabel.Visible = true;
-            gameOverLabel.Text = "GAME OVER";
-        }
+	private void UpdateHealthBar()
+	{
+		var healthBars = GetTree().GetNodesInGroup("healthbar");
+		if (healthBars.Count == 0) return;
 
-        // Sau vài giây quay về Menu
-        GetTree().CreateTimer(3.0).Timeout += () =>
-        {
-            GetTree().ChangeSceneToFile("res://Scene/main_menu.tscn");
-        };
-    }
-    private void Respawn()
-    {
-        currentHP = maxHP;
-        Velocity = Vector2.Zero;
+		var bar = healthBars[0] as AnimatedSprite2D;
 
-        var spawnPoint = GetNodeOrNull<Marker2D>("../SpawnPoint");
-        if (spawnPoint != null)
-        {
-            GlobalPosition = spawnPoint.GlobalPosition;
-        }
-        else
-        {
-            GD.PrintErr("Không tìm thấy SpawnPoint!");
-            GlobalPosition = new Vector2(100, 100);
-        }
+		string animName = currentHP switch
+		{
+			0 => "0 HP",
+			1 => "1 HP",
+			2 => "2 HP",
+			3 => "3 HP",
+			4 => "Full HP",
+			_ => "0 HP"
+		};
 
-        SetPhysicsProcess(true);
-        isDead = false; // reset trạng thái chết
+		bar.Animation = animName;
+		bar.Frame = 0;
+		bar.Stop();
+	}
 
-        GD.Print("Player respawned. Lives: " + lives + ", HP reset to " + currentHP);
-    }
-    private void HandleDeath()
-    {
-        if (isDead) return;
+	// ======================================
+	// LADDER CHECK
+	// ======================================
+	private bool CheckLadder()
+	{
+		var ray = GetNodeOrNull<RayCast2D>("LadderRayCast");
+		if (ray == null)
+		{
+			GD.PrintErr("Không tìm thấy LadderRayCast!");
+			return false;
+		}
 
-        isDead = true;
-        PlayAnim("Dead");
-        Velocity = Vector2.Zero;
-        SetPhysicsProcess(false);
+		// Nếu ray va chạm với tile thang (layer 2), trả về true
+		return ray.IsColliding();
+	}
+	private void LoseLife()
+	{
+		lives--;
 
-        // Sau 3 giây mới xử lý tiếp
-        GetTree().CreateTimer(3.0).Timeout += () =>
-        {
-            lives--;
-            UpdateLivesUI();
+		UpdateLivesUI();
 
-            if (lives > 0)
-            {
-                currentHP = maxHP;
-                Respawn();
-            }
-            else
-            {
-                GameOver();
-            }
-        };
-    }
+		if (lives > 0)
+		{
+			// Reset HP và hồi sinh
+			currentHP = maxHP;
+			Respawn();
+		}
+		else
+		{
+			GameOver();
+		}
+	}
+	private void UpdateLivesUI()
+	{
+		var lifeCountLabel = GetNodeOrNull<Label>("../HUD/LifeCount");
+		if (lifeCountLabel != null)
+		{
+			lifeCountLabel.Text = "x" + lives;
+		}
+	}
+	private void GameOver()
+	{
+		GD.Print("Game Over!");
+
+		var gameOverLabel = GetNodeOrNull<Label>("../HUD/GameOver");
+		if (gameOverLabel != null)
+		{
+			gameOverLabel.Visible = true;
+			gameOverLabel.Text = "GAME OVER";
+		}
+
+		// Sau vài giây quay về Menu
+		GetTree().CreateTimer(3.0).Timeout += () =>
+		{
+			GetTree().ChangeSceneToFile("res://Scene/main_menu.tscn");
+		};
+	}
+	private void Respawn()
+	{
+		currentHP = maxHP;
+		Velocity = Vector2.Zero;
+
+		var spawnPoint = GetNodeOrNull<Marker2D>("../SpawnPoint");
+		if (spawnPoint != null)
+		{
+			GlobalPosition = spawnPoint.GlobalPosition;
+		}
+		else
+		{
+			GD.PrintErr("Không tìm thấy SpawnPoint!");
+			GlobalPosition = new Vector2(100, 100);
+		}
+
+		SetPhysicsProcess(true);
+		isDead = false; // reset trạng thái chết
+
+		GD.Print("Player respawned. Lives: " + lives + ", HP reset to " + currentHP);
+	}
+	private void HandleDeath()
+	{
+		if (isDead) return;
+
+		isDead = true;
+		PlayAnim("Dead");
+		Velocity = Vector2.Zero;
+		SetPhysicsProcess(false);
+
+		// Sau 3 giây mới xử lý tiếp
+		GetTree().CreateTimer(3.0).Timeout += () =>
+		{
+			lives--;
+			UpdateLivesUI();
+
+			if (lives > 0)
+			{
+				currentHP = maxHP;
+				Respawn();
+			}
+			else
+			{
+				GameOver();
+			}
+		};
+	}
 }
