@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dhj211ufv7gjm"
-path="res://.godot/imported/Ladder.png-0708ad491f5ca76f0d3ef06a3251d419.ctex"
+uid="uid://c58yuilfn6cib"
+path="res://.godot/imported/Props-01.png-c016910931e08e8b6d04208852b9da21.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Characters/Item/Ladder.png"
-dest_files=["res://.godot/imported/Ladder.png-0708ad491f5ca76f0d3ef06a3251d419.ctex"]
+source_file="res://Assets/Tilemap/Props-01.png"
+dest_files=["res://.godot/imported/Props-01.png-c016910931e08e8b6d04208852b9da21.ctex"]
 
 [params]
 

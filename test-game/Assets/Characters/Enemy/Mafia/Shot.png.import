@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bq7siv308v7bd"
-path="res://.godot/imported/Gemini_Generated_Image_x93283x93283x932-removebg-preview.png-5a60a8f4e6d2346f261e38762b0d1583.ctex"
+uid="uid://b7ghwl5bfylj7"
+path="res://.godot/imported/Shot.png-e3a962b95d7db78a592ca914e274a1be.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Characters/Main/Gemini_Generated_Image_x93283x93283x932-removebg-preview.png"
-dest_files=["res://.godot/imported/Gemini_Generated_Image_x93283x93283x932-removebg-preview.png-5a60a8f4e6d2346f261e38762b0d1583.ctex"]
+source_file="res://Assets/Characters/Enemy/Mafia/Shot.png"
+dest_files=["res://.godot/imported/Shot.png-e3a962b95d7db78a592ca914e274a1be.ctex"]
 
 [params]
 

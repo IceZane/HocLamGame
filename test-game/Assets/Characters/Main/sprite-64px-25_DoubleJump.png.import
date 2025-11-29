@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ccr76erpttyhv"
-path="res://.godot/imported/Recharge.png-fcd43cffc5353e5a9151163ed0086e65.ctex"
+uid="uid://dudpkkuvew4lm"
+path="res://.godot/imported/sprite-64px-25_DoubleJump.png-b221df0852a5904bf44d8925f3951596.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Characters/Main/Recharge.png"
-dest_files=["res://.godot/imported/Recharge.png-fcd43cffc5353e5a9151163ed0086e65.ctex"]
+source_file="res://Assets/Characters/Main/sprite-64px-25_DoubleJump.png"
+dest_files=["res://.godot/imported/sprite-64px-25_DoubleJump.png-b221df0852a5904bf44d8925f3951596.ctex"]
 
 [params]
 

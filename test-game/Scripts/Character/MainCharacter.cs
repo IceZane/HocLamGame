@@ -91,6 +91,8 @@ public partial class MainCharacter : CharacterBody2D
 
 		anim.AnimationFinished += OnAnimationFinished;
 		AddToGroup("player");
+		anim.FlipH = true;   // mặc định nhìn phải
+		FacingRight = true;  // trạng thái ban đầu là nhìn phải
 	}
 	public override void _Process(double delta)
 {
@@ -114,14 +116,21 @@ public partial class MainCharacter : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
+
 		// ====== Ladder check ======
 		isClimbing = CheckLadder();
 
 		if (isClimbing)
 		{
-			velocity.Y = Input.GetAxis("ui_up", "ui_down") * WalkSpeed;
-			if (Mathf.Abs(velocity.Y) < 1f)
+			float climbInput = Input.GetAxis("ui_up", "ui_down");
+			if (Mathf.Abs(climbInput) < 0.1f)
+			{
 				velocity.Y = 0;
+			}
+			else
+			{
+				velocity.Y = climbInput * WalkSpeed;
+			}
 		}
 		else
 		{
@@ -140,10 +149,12 @@ public partial class MainCharacter : CharacterBody2D
 			{
 				velocity.Y = JumpVelocity;
 				jumpCount++;
-
 				anim.Stop();
-				anim.Play("Jump");
- 				// ✅ chạy animation mỗi lần nhảy
+
+				if (jumpCount == 1)
+					PlayAnim("Jump");        // lần nhảy đầu
+				else if (jumpCount == 2)
+					PlayAnim("DoubleJump");  // lần nhảy thứ hai
 			}
 		}
 
@@ -156,7 +167,7 @@ public partial class MainCharacter : CharacterBody2D
 		// Flip sprite + cập nhật FacingRight
 		if (dir != 0)
 		{
-			anim.FlipH = dir < 0;
+			anim.FlipH = dir > 0;
 			FacingRight = dir > 0;
 
 			var gunPoint = GetNode<Node2D>("Sprite2D/GunPoint");
@@ -166,8 +177,21 @@ public partial class MainCharacter : CharacterBody2D
 		Velocity = velocity;
 		MoveAndSlide();
 		if (IsOnFloor())
+		{
 			jumpCount = 0;
+			if ((anim.Animation == "Jump" || anim.Animation == "DoubleJump") && anim.IsPlaying())
+			{
+				anim.Stop();
+				PlayAnim("default"); // hoặc Walk/Run tùy Velocity.X
+			}
 
+			if (anim.Animation == "Hurt" && anim.IsPlaying())
+			{
+				anim.Stop();
+				PlayAnim("default");
+				isHurt = false;
+			}
+		}
 		// =============================
 		// Combat input
 		// =============================
@@ -199,17 +223,27 @@ public partial class MainCharacter : CharacterBody2D
 		}
 
 		// =============================
-		// Movement animation
+		// Movement animation (khi không combat)
 		// =============================
 		if (!isShooting && !isAttacking && !isReloading && !isDead)
 		{
-			if (isHurt)
+			if (isClimbing)
+			{
+				float climbInput = Input.GetAxis("ui_up", "ui_down");
+				PlayAnim("Climb");
+				if (Mathf.Abs(climbInput) < 0.1f)
+				{
+					anim.Frame = 0; // giữ frame 0
+				}
+			}
+
+			else if (isHurt)
 			{
 				PlayAnim("Hurt");
 			}
 			else if (!IsOnFloor())
 			{
-				PlayAnim("Jump");
+				PlayAnim(jumpCount == 2 ? "DoubleJump" : "Jump");
 			}
 			else if (Mathf.Abs(Velocity.X) > 0 && Input.IsActionPressed("run"))
 			{
@@ -224,7 +258,6 @@ public partial class MainCharacter : CharacterBody2D
 				PlayAnim("default");
 			}
 		}
-
 	}
 
 	private void PlayAnim(string name)
@@ -262,7 +295,7 @@ public partial class MainCharacter : CharacterBody2D
 		{
 			if (node is ZombieEnemy zombie)
 			{
-				float attackRange = 20f;
+				float attackRange = 35f;
 				if (GlobalPosition.DistanceTo(zombie.GlobalPosition) <= attackRange)
 				{
 					zombie.TakeDamage(1);
@@ -380,8 +413,7 @@ public partial class MainCharacter : CharacterBody2D
 			GD.PrintErr("Không tìm thấy LadderRayCast!");
 			return false;
 		}
-
-		// Nếu ray va chạm với tile thang (layer 2), trả về true
+		// Raycast chỉ check layer thang (set trong Inspector)
 		return ray.IsColliding();
 	}
 	private void LoseLife()

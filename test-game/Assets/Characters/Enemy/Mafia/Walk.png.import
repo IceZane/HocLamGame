@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://sq34gp72rcpi"
-path="res://.godot/imported/Screenshot_2025-11-17_210426-removebg-preview.png-80a407af16db2ee82a2eef0a8c2d8de8.ctex"
+uid="uid://3q6a0gd4m5ap"
+path="res://.godot/imported/Walk.png-786fe0e9da309c793d9d615fb8fad991.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Characters/Main/Screenshot_2025-11-17_210426-removebg-preview.png"
-dest_files=["res://.godot/imported/Screenshot_2025-11-17_210426-removebg-preview.png-80a407af16db2ee82a2eef0a8c2d8de8.ctex"]
+source_file="res://Assets/Characters/Enemy/Mafia/Walk.png"
+dest_files=["res://.godot/imported/Walk.png-786fe0e9da309c793d9d615fb8fad991.ctex"]
 
 [params]
 

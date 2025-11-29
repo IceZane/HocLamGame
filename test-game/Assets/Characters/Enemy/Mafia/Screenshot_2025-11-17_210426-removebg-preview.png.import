@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xgylqr0n5qro"
-path="res://.godot/imported/Dead.png-665ca613b2099cc977caefe32c365a2f.ctex"
+uid="uid://sq34gp72rcpi"
+path="res://.godot/imported/Screenshot_2025-11-17_210426-removebg-preview.png-6a957f734ae60e46b2577b03f4715fec.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Characters/Main/Dead.png"
-dest_files=["res://.godot/imported/Dead.png-665ca613b2099cc977caefe32c365a2f.ctex"]
+source_file="res://Assets/Characters/Enemy/Mafia/Screenshot_2025-11-17_210426-removebg-preview.png"
+dest_files=["res://.godot/imported/Screenshot_2025-11-17_210426-removebg-preview.png-6a957f734ae60e46b2577b03f4715fec.ctex"]
 
 [params]
 

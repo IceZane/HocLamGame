@@ -3,7 +3,7 @@ using System;
 
 public partial class ZombieEnemy : CharacterBody2D
 {
-	[Export] public float Speed = 50f;
+	[Export] public float Speed = 20f;
 	[Export] public int MaxHP = 3;
 	[Export] public float AttackCooldown = 1.5f;
 

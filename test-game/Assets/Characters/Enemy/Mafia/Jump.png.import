@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3q6a0gd4m5ap"
-path="res://.godot/imported/Walk.png-8355b166a7f00ab089d3170fabe8fa9d.ctex"
+uid="uid://corsdjswhijf3"
+path="res://.godot/imported/Jump.png-900520c9cebc24b2fe4a432561e8af17.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Characters/Main/Walk.png"
-dest_files=["res://.godot/imported/Walk.png-8355b166a7f00ab089d3170fabe8fa9d.ctex"]
+source_file="res://Assets/Characters/Enemy/Mafia/Jump.png"
+dest_files=["res://.godot/imported/Jump.png-900520c9cebc24b2fe4a432561e8af17.ctex"]
 
 [params]
 
