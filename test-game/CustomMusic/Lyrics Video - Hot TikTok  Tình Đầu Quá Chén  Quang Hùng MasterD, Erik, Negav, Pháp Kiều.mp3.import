@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cbn7pu21mkom3"
+path="res://.godot/imported/Lyrics Video - Hot TikTok  Tình Đầu Quá Chén  Quang Hùng MasterD, Erik, Negav, Pháp Kiều.mp3-549fb54f9101a5df8ff18955362ca71a.mp3str"
+
+[deps]
+
+source_file="res://CustomMusic/Lyrics Video - Hot TikTok  Tình Đầu Quá Chén  Quang Hùng MasterD, Erik, Negav, Pháp Kiều.mp3"
+dest_files=["res://.godot/imported/Lyrics Video - Hot TikTok  Tình Đầu Quá Chén  Quang Hùng MasterD, Erik, Negav, Pháp Kiều.mp3-549fb54f9101a5df8ff18955362ca71a.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

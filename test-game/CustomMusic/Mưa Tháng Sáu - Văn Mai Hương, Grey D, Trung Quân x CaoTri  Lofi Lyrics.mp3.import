@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dcsbhtfmqfxcq"
+path="res://.godot/imported/Mưa Tháng Sáu - Văn Mai Hương, Grey D, Trung Quân x CaoTri  Lofi Lyrics.mp3-674fdcc663ac9174374bec37e1b3f3de.mp3str"
+
+[deps]
+
+source_file="res://CustomMusic/Mưa Tháng Sáu - Văn Mai Hương, Grey D, Trung Quân x CaoTri  Lofi Lyrics.mp3"
+dest_files=["res://.godot/imported/Mưa Tháng Sáu - Văn Mai Hương, Grey D, Trung Quân x CaoTri  Lofi Lyrics.mp3-674fdcc663ac9174374bec37e1b3f3de.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

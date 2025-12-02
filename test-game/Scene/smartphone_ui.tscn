@@ -1,0 +1,265 @@
+[gd_scene load_steps=10 format=3 uid="uid://b7qlur7tgoyff"]
+
+[ext_resource type="Texture2D" uid="uid://02r5ger0jjxk" path="res://Assets/Characters/UI/Phone/Phone_1.png" id="1_jtpe5"]
+[ext_resource type="Script" uid="uid://2fk76gpmbvl4" path="res://Scripts/UI/SmartphoneUi.cs" id="1_yi8da"]
+[ext_resource type="Texture2D" uid="uid://d3vamhn1hlbn3" path="res://Assets/Characters/UI/Phone/Music_Purple.png" id="2_cesqh"]
+[ext_resource type="Texture2D" uid="uid://dh1fcd4dksicy" path="res://Assets/Characters/UI/Phone/Messages_Green.png" id="3_0rv3y"]
+[ext_resource type="Texture2D" uid="uid://b2gk2hl1l2tl1" path="res://Assets/Characters/UI/Phone/Settings_Gray.png" id="5_imbvu"]
+[ext_resource type="Script" uid="uid://dfh65qidyro74" path="res://Scripts/UI/SmartPhoneScreen/MusicScreen.cs" id="6_u0bww"]
+[ext_resource type="Texture2D" uid="uid://bypj50eaunkyp" path="res://Assets/Characters/UI/Phone/play.png" id="7_bjtdk"]
+[ext_resource type="Texture2D" uid="uid://dus1vxuglv41a" path="res://Assets/Characters/UI/Phone/pause.png" id="8_wxrq8"]
+[ext_resource type="Texture2D" uid="uid://de2brvhmvt85h" path="res://Assets/Characters/UI/Phone/Back.png" id="9_5y0ll"]
+
+[node name="SmartphoneUI" type="CanvasLayer"]
+script = ExtResource("1_yi8da")
+
+[node name="Panel" type="TextureRect" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1650.0
+offset_top = -3000.0
+grow_horizontal = 0
+grow_vertical = 0
+texture = ExtResource("1_jtpe5")
+
+[node name="ColorRect" type="ColorRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 184.0
+offset_top = 292.0
+offset_right = -175.0
+offset_bottom = -407.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="IconMenu" type="GridContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 217.99998
+offset_top = 532.0
+offset_right = 340.0
+offset_bottom = 722.0
+scale = Vector2(10, 10)
+columns = 4
+
+[node name="Music" type="TextureButton" parent="Panel/IconMenu"]
+layout_mode = 2
+texture_normal = ExtResource("2_cesqh")
+
+[node name="Message" type="TextureButton" parent="Panel/IconMenu"]
+layout_mode = 2
+texture_normal = ExtResource("3_0rv3y")
+
+[node name="Setting" type="TextureButton" parent="Panel/IconMenu"]
+layout_mode = 2
+texture_normal = ExtResource("5_imbvu")
+
+[node name="MusicScreen" type="Control" parent="Panel"]
+layout_mode = 1
+anchor_left = 0.14400001
+anchor_top = 0.09900001
+anchor_right = 0.896
+anchor_bottom = 0.864
+offset_left = -55.60002
+offset_top = -1.0000305
+offset_right = 0.5999756
+script = ExtResource("6_u0bww")
+
+[node name="MusicBackground" type="TextureRect" parent="Panel/MusicScreen"]
+layout_mode = 0
+offset_right = 1292.0
+offset_bottom = 2281.0
+
+[node name="ColorRect" type="ColorRect" parent="Panel/MusicScreen"]
+layout_mode = 0
+offset_left = 204.0
+offset_top = 1837.0
+offset_right = 1073.0
+offset_bottom = 2085.0
+
+[node name="MusicList" type="ItemList" parent="Panel/MusicScreen"]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 42.0
+offset_right = 269.59998
+offset_bottom = 383.8
+scale = Vector2(5, 5)
+theme_override_font_sizes/font_size = 20
+
+[node name="PlayButton" type="TextureButton" parent="Panel/MusicScreen"]
+layout_mode = 0
+offset_left = 509.0
+offset_top = 1837.0
+offset_right = 533.0
+offset_bottom = 1861.0
+scale = Vector2(10, 10)
+texture_normal = ExtResource("7_bjtdk")
+
+[node name="PauseButton" type="TextureButton" parent="Panel/MusicScreen"]
+layout_mode = 0
+offset_left = 509.0
+offset_top = 1837.0
+offset_right = 533.0
+offset_bottom = 1861.0
+scale = Vector2(10, 10)
+texture_normal = ExtResource("8_wxrq8")
+
+[node name="NextButton" type="TextureButton" parent="Panel/MusicScreen"]
+layout_mode = 0
+offset_left = 784.0
+offset_top = 1837.0
+offset_right = 808.0
+offset_bottom = 1861.0
+scale = Vector2(10, 10)
+texture_normal = ExtResource("9_5y0ll")
+flip_h = true
+
+[node name="PreviouButton" type="TextureButton" parent="Panel/MusicScreen"]
+layout_mode = 0
+offset_left = 209.99998
+offset_top = 1836.9999
+offset_right = 233.99998
+offset_bottom = 1860.9999
+scale = Vector2(10, 10)
+texture_normal = ExtResource("9_5y0ll")
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="Panel/MusicScreen"]
+
+[node name="MessageScreen" type="Control" parent="Panel"]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MessageScreen" type="ColorRect" parent="Panel/MessageScreen"]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 290.0
+offset_right = 1474.0
+offset_bottom = 2593.0
+color = Color(1, 0.5568628, 1, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MessageScreen"]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 298.0
+offset_right = 1462.0
+offset_bottom = 2577.0
+
+[node name="MomChat" type="Panel" parent="Panel/MessageScreen/VBoxContainer"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_stretch_ratio = 0.0
+
+[node name="Mom" type="Label" parent="Panel/MessageScreen/VBoxContainer/MomChat"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 199.0
+theme_override_font_sizes/font_size = 50
+text = "MOM"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MomMessages" type="RichTextLabel" parent="Panel/MessageScreen/VBoxContainer/MomChat"]
+layout_mode = 0
+offset_left = 304.0
+offset_right = 1267.0
+offset_bottom = 200.0
+
+[node name="FriendChat" type="Panel" parent="Panel/MessageScreen/VBoxContainer"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+
+[node name="Friend" type="Label" parent="Panel/MessageScreen/VBoxContainer/FriendChat"]
+layout_mode = 0
+offset_right = 194.0
+offset_bottom = 202.0
+theme_override_font_sizes/font_size = 50
+text = "Friend"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FriendMessages" type="RichTextLabel" parent="Panel/MessageScreen/VBoxContainer/FriendChat"]
+layout_mode = 0
+offset_left = 304.0
+offset_right = 1267.0
+offset_bottom = 197.0
+
+[node name="SettingScreen" type="Control" parent="Panel"]
+visible = false
+anchors_preset = 0
+offset_left = 184.0
+offset_top = 285.0
+offset_right = 1474.0
+offset_bottom = 2592.0
+
+[node name="SettingBackground" type="ColorRect" parent="Panel/SettingScreen"]
+layout_mode = 0
+offset_right = 1290.0
+offset_bottom = 2308.0
+color = Color(1, 1, 0.3764706, 1)
+
+[node name="ChooseBackground" type="Label" parent="Panel/SettingScreen"]
+layout_mode = 0
+offset_left = -2.0
+offset_top = 136.0
+offset_right = 1284.0
+offset_bottom = 223.0
+theme_override_colors/font_color = Color(0.27058825, 1, 1, 1)
+theme_override_font_sizes/font_size = 63
+text = "Choose Background"
+horizontal_alignment = 1
+
+[node name="BackgroundList" type="ItemList" parent="Panel/SettingScreen"]
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 0
+offset_left = -2.0
+offset_top = 247.0
+offset_right = 1284.0
+offset_bottom = 1098.0
+
+[node name="ApplyBackground" type="Button" parent="Panel/SettingScreen"]
+custom_minimum_size = Vector2(50, 20)
+layout_mode = 0
+offset_left = 507.0
+offset_top = 1156.0
+offset_right = 782.0
+offset_bottom = 1251.0
+size_flags_horizontal = 4
+size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 53
+text = "Apply"
+icon_alignment = 1
+
+[node name="MusicVolume" type="Label" parent="Panel/SettingScreen"]
+layout_mode = 0
+offset_left = 422.0
+offset_top = 1251.0
+offset_right = 862.0
+offset_bottom = 1377.0
+theme_override_colors/font_color = Color(0.03529412, 1, 1, 1)
+theme_override_font_sizes/font_size = 92
+text = "Music"
+horizontal_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="Panel/SettingScreen"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 0
+offset_left = 94.00001
+offset_top = 1156.0
+offset_right = 327.19998
+offset_bottom = 1256.0
+scale = Vector2(5, 5)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="HomeButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 498.0
+offset_top = 2593.0
+offset_right = 989.0
+offset_bottom = 2863.0

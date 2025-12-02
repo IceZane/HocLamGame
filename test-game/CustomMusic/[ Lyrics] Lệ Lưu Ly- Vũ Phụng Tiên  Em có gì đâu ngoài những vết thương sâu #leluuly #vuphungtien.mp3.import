@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://d2nx4nehbo7ee"
+path="res://.godot/imported/[ Lyrics] Lệ Lưu Ly- Vũ Phụng Tiên  Em có gì đâu ngoài những vết thương sâu #leluuly #vuphungtien.mp3-0448a2cf172f02804452620a49ef2e5b.mp3str"
+
+[deps]
+
+source_file="res://CustomMusic/[ Lyrics] Lệ Lưu Ly- Vũ Phụng Tiên  Em có gì đâu ngoài những vết thương sâu #leluuly #vuphungtien.mp3"
+dest_files=["res://.godot/imported/[ Lyrics] Lệ Lưu Ly- Vũ Phụng Tiên  Em có gì đâu ngoài những vết thương sâu #leluuly #vuphungtien.mp3-0448a2cf172f02804452620a49ef2e5b.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

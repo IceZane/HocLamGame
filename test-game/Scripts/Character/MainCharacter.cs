@@ -5,8 +5,8 @@ public partial class MainCharacter : CharacterBody2D
 {
 	// ====== MOVEMENT SETTINGS ======
 	private bool isClimbing = false;
-	public const float WalkSpeed = 50f;
-	public const float RunSpeed = 150f;
+	public const float WalkSpeed = 25f;
+	public const float RunSpeed = 100f;
 	public const float JumpVelocity = -200f;
 	private int jumpCount = 0;
 	private int maxJumpCount = 2; // nhảy tối đa 2 lần
@@ -44,6 +44,14 @@ public partial class MainCharacter : CharacterBody2D
 	private int lives = 3; // số mạng ban đầu
 	private const int maxLives = 3;
 	public int GetHP() => currentHP;
+	
+	// ====== PhoneUI ======
+	private CanvasLayer smartphoneUI;
+	private bool isUsingPhone = false;
+	private float phoneAnimTime = 0f;
+	// State flags
+	private bool isPhoneOpening = false;    // đang chạy PutOutPhone (chưa mở xong)
+
 
 	public override void _Ready()
 	{
@@ -73,6 +81,8 @@ public partial class MainCharacter : CharacterBody2D
 			gameOverLabel.Visible = false;
 		}
 		UpdateLivesUI();
+		smartphoneUI = GetNode<CanvasLayer>("../HUD/SmartphoneUI"); // hoặc GetTree().Root.GetNode("SmartphoneUI") nếu nằm ngoài scene
+		smartphoneUI.Visible = false;
 
 		var tileMap = GetNodeOrNull<Node>("TileMap");
 		if (tileMap != null)
@@ -111,15 +121,50 @@ public partial class MainCharacter : CharacterBody2D
 			pauseMenu.Visible = false;
 		}
 	}
-}
+
+	if (Input.IsActionJustPressed("ui_tab"))
+	{
+		if (!isUsingPhone)
+		{
+			// Bật điện thoại
+			isUsingPhone = true;
+			isPhoneOpening = true;
+			phoneAnimTime = 0f;
+			smartphoneUI.Visible = false;
+			PlayAnim("PutOutPhone");
+
+			// Sau 3 giây: chỉ hiện UI, vẫn để PutOutPhone chạy tiếp
+			GetTree().CreateTimer(3.0).Timeout += () =>
+			{
+				if (isUsingPhone && isPhoneOpening && anim.Animation == "PutOutPhone")
+				{
+					smartphoneUI.Visible = true;
+				}
+			};
+		}
+		else
+		{
+			// Tắt điện thoại
+			isUsingPhone = false;
+			isPhoneOpening = false;
+			smartphoneUI.Visible = false;
+			PlayAnim("default");
+		}
+	}
+	if(isUsingPhone) return;
+	}
 
 	public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
-
 		// ====== Ladder check ======
 		isClimbing = CheckLadder();
-
+		if (isUsingPhone)
+		{
+			Velocity = Vector2.Zero;   // đứng yên
+			MoveAndSlide();            // vẫn gọi để giữ physics ổn định
+			return;                    // thoát, không xử lý jump/shoot/run...
+		}
 		if (isClimbing)
 		{
 			float climbInput = Input.GetAxis("ui_up", "ui_down");
@@ -176,6 +221,7 @@ public partial class MainCharacter : CharacterBody2D
 
 		Velocity = velocity;
 		MoveAndSlide();
+
 		if (IsOnFloor())
 		{
 			jumpCount = 0;
@@ -227,6 +273,21 @@ public partial class MainCharacter : CharacterBody2D
 		// =============================
 		if (!isShooting && !isAttacking && !isReloading && !isDead)
 		{
+			if (isUsingPhone)
+			{
+				// Nếu đang chạy anim PutOutPhone thì tăng bộ đếm thời gian
+				if (isPhoneOpening)
+				{
+					
+				}
+				else 
+				{
+					if (anim.Animation != "UsePhone")
+						PlayAnim("UsePhone");
+				}
+				// Ngăn climb/walk/run/default override khi đang dùng điện thoại
+				return;
+			}
 			if (isClimbing)
 			{
 				float climbInput = Input.GetAxis("ui_up", "ui_down");
@@ -280,6 +341,15 @@ public partial class MainCharacter : CharacterBody2D
 			case "Reload": isReloading = false; PlayAnim("default"); break;
 			case "Hurt": isHurt = false; PlayAnim("default"); break;
 			case "Dead": break;
+			
+			case "PutOutPhone":
+			if(isUsingPhone && isPhoneOpening)
+			{
+				isPhoneOpening = false;
+				// Khi anim PutOutPhone kết thúc → chuyển sang UsePhone
+				PlayAnim("UsePhone");
+			}
+			break;
 		}
 	}
 

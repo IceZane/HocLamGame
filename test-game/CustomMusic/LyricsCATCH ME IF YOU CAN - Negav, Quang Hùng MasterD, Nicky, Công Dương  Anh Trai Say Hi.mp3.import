@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bq6nvdqc16hr3"
+path="res://.godot/imported/LyricsCATCH ME IF YOU CAN - Negav, Quang Hùng MasterD, Nicky, Công Dương  Anh Trai Say Hi.mp3-97a32340ed66e0a71b8245f000fc42a1.mp3str"
+
+[deps]
+
+source_file="res://CustomMusic/LyricsCATCH ME IF YOU CAN - Negav, Quang Hùng MasterD, Nicky, Công Dương  Anh Trai Say Hi.mp3"
+dest_files=["res://.godot/imported/LyricsCATCH ME IF YOU CAN - Negav, Quang Hùng MasterD, Nicky, Công Dương  Anh Trai Say Hi.mp3-97a32340ed66e0a71b8245f000fc42a1.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

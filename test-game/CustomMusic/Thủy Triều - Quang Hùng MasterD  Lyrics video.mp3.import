@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cknoidfskiwxs"
+path="res://.godot/imported/Thủy Triều - Quang Hùng MasterD  Lyrics video.mp3-41ee7a2188ef7c83217787f3dc11bad4.mp3str"
+
+[deps]
+
+source_file="res://CustomMusic/Thủy Triều - Quang Hùng MasterD  Lyrics video.mp3"
+dest_files=["res://.godot/imported/Thủy Triều - Quang Hùng MasterD  Lyrics video.mp3-41ee7a2188ef7c83217787f3dc11bad4.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
