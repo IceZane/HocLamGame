@@ -1,0 +1,149 @@
+[gd_scene load_steps=17 format=3 uid="uid://dtys7epvts5r7"]
+
+[ext_resource type="FontFile" uid="uid://65qed0bvupa7" path="res://Assets/Font/East Tiger Regular.otf" id="1_4xxn1"]
+[ext_resource type="Script" uid="uid://c864o2qvdxfef" path="res://Scripts/UI/AmmoLabel.cs" id="2_3qwin"]
+[ext_resource type="Texture2D" uid="uid://c40lc5uldhsaw" path="res://Assets/Characters/UI/06.png" id="3_7odbf"]
+[ext_resource type="Script" uid="uid://dh84jbc7olk1r" path="res://Scripts/UI/HeathBar.cs" id="4_hjpjq"]
+[ext_resource type="Texture2D" uid="uid://bje5iobxjhkq1" path="res://Assets/Characters/UI/basic life bars a icons .png" id="5_axi7f"]
+[ext_resource type="FontFile" uid="uid://dfkub48esobtl" path="res://Assets/Font/Swash Break Trial.otf" id="6_ulpbq"]
+[ext_resource type="PackedScene" uid="uid://bl7ptif282ju8" path="res://Scene/pause_menu.tscn" id="7_688fl"]
+[ext_resource type="PackedScene" uid="uid://b7qlur7tgoyff" path="res://Scene/smartphone_ui.tscn" id="8_4dp7q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3dxm6"]
+atlas = ExtResource("3_7odbf")
+region = Rect2(194, 96, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lgr22"]
+atlas = ExtResource("3_7odbf")
+region = Rect2(146, 64, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_trn2v"]
+atlas = ExtResource("3_7odbf")
+region = Rect2(98, 16, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_03owx"]
+atlas = ExtResource("3_7odbf")
+region = Rect2(50, 32, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wkp8b"]
+atlas = ExtResource("3_7odbf")
+region = Rect2(2, 32, 48, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_c6i3y"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3dxm6")
+}],
+"loop": true,
+"name": &"0 HP",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lgr22")
+}],
+"loop": true,
+"name": &"1 HP",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_trn2v")
+}],
+"loop": true,
+"name": &"2 HP",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_03owx")
+}],
+"loop": true,
+"name": &"3 HP",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wkp8b")
+}],
+"loop": false,
+"name": &"Full HP",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xj5bp"]
+atlas = ExtResource("5_axi7f")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hjmnv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xj5bp")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="HUD" type="CanvasLayer"]
+
+[node name="AmmoLabel" type="Label" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -168.0
+offset_bottom = 61.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("1_4xxn1")
+theme_override_font_sizes/font_size = 28
+script = ExtResource("2_3qwin")
+PlayerPath = NodePath("../../CharacterBody2D")
+
+[node name="HeathBar" type="AnimatedSprite2D" parent="."]
+position = Vector2(122.000015, 36)
+scale = Vector2(4.9375, 3.8125)
+sprite_frames = SubResource("SpriteFrames_c6i3y")
+animation = &"Full HP"
+script = ExtResource("4_hjpjq")
+
+[node name="Life" type="AnimatedSprite2D" parent="."]
+position = Vector2(117, 70)
+scale = Vector2(1.7656249, 1.921875)
+sprite_frames = SubResource("SpriteFrames_hjmnv")
+
+[node name="LifeCount" type="Label" parent="."]
+offset_left = 130.0
+offset_top = 61.0
+offset_right = 170.0
+offset_bottom = 84.0
+theme_override_fonts/font = ExtResource("1_4xxn1")
+theme_override_font_sizes/font_size = 21
+
+[node name="GameOver" type="Label" parent="."]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -54.0
+offset_bottom = 54.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("6_ulpbq")
+theme_override_font_sizes/font_size = 67
+text = "GAME OVER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PauseMenu" parent="." instance=ExtResource("7_688fl")]
+
+[node name="SmartphoneUI" parent="." instance=ExtResource("8_4dp7q")]
+anchors_preset = 11
+anchor_left = 1.0
+offset_left = -293.0
+offset_top = 367.0
+offset_right = 1387.0
+offset_bottom = 2767.0
+grow_horizontal = 0

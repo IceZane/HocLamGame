@@ -116,24 +116,41 @@ public partial class ZombieEnemy : CharacterBody2D
 	{
 		if (attackTimer.IsStopped())
 		{
-			attackTimer.Start();
-			anim.Play("Attack");
+			// Tầm đánh (có thể chỉnh tuỳ ý, ví dụ 40f)
+			float attackRange = 40f;
 
 			if (body is MainCharacter playerChar)
 			{
-				playerChar.TakeDamage();
-				GD.Print("Zombie attacked player!");
+				// Kiểm tra khoảng cách
+				float distance = GlobalPosition.DistanceTo(playerChar.GlobalPosition);
+
+				if (distance <= attackRange)
+				{
+					attackTimer.Start();
+					anim.Play("Attack");
+
+					// Tính hướng từ zombie tới player
+					Vector2 attackDirection = (playerChar.GlobalPosition - GlobalPosition).Normalized();
+
+					// Gọi TakeDamage với hướng knockback
+					playerChar.TakeDamage(attackDirection);
+
+					GD.Print("Zombie attacked player!");
+				}
 			}
 		}
 	}
 
-	public void TakeDamage(int amount)
+	public void TakeDamage(int amount, Vector2 attackDirection)
 	{
 		currentHP -= amount;
 
 		if (currentHP > 0)
 		{
 			anim.Play("Hurt");
+			FlashRed(); // chớp đỏ
+			ApplyKnockback(attackDirection, 150f); // bật lùi
+
 			SetPhysicsProcess(false);
 			GetTree().CreateTimer(0.3).Timeout += () =>
 			{
@@ -151,11 +168,24 @@ public partial class ZombieEnemy : CharacterBody2D
 	{
 		Velocity = Vector2.Zero;
 		anim.Play("Dead");
-		SetPhysicsProcess(false);
+		SetProcess(false);
+		SetPhysicsProcess(true);
 
 		GetTree().CreateTimer(2).Timeout += () =>
 		{
 			QueueFree();
 		};
+	}
+	private async void FlashRed()
+	{
+		anim.Modulate = new Color(1, 0, 0); // đỏ
+		await ToSignal(GetTree().CreateTimer(0.1f), SceneTreeTimer.SignalName.Timeout);
+		anim.Modulate = Colors.White;       // trả lại màu
+	}
+
+	public void ApplyKnockback(Vector2 direction, float force)
+	{
+		Velocity = direction.Normalized() * force;
+		MoveAndSlide();
 	}
 }

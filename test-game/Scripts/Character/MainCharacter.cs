@@ -46,7 +46,8 @@ public partial class MainCharacter : CharacterBody2D
 	public int GetHP() => currentHP;
 	
 	// ====== PhoneUI ======
-	private CanvasLayer smartphoneUI;
+	private Control smartphoneUI;
+	private SmartphoneUi SPUI;
 	private bool isUsingPhone = false;
 	private float phoneAnimTime = 0f;
 	// State flags
@@ -55,9 +56,9 @@ public partial class MainCharacter : CharacterBody2D
 
 	public override void _Ready()
 	{
-
+		SPUI = GetNode<SmartphoneUi>("../HUD/SmartphoneUI");
 		var camera = GetNodeOrNull<Camera2D>("../CharacterBody2D/Camera2D");
-		var tileMapLayer = GetNodeOrNull<TileMapLayer>("../TileMap/TileMapLayer");
+		var tileMapLayer = GetNodeOrNull<TileMapLayer>("../CurrentMap/TileMap/Ground");
 
 		if (camera == null || tileMapLayer == null)
 		{
@@ -81,7 +82,7 @@ public partial class MainCharacter : CharacterBody2D
 			gameOverLabel.Visible = false;
 		}
 		UpdateLivesUI();
-		smartphoneUI = GetNode<CanvasLayer>("../HUD/SmartphoneUI"); // hoặc GetTree().Root.GetNode("SmartphoneUI") nếu nằm ngoài scene
+		smartphoneUI = GetNode<Control>("../HUD/SmartphoneUI");
 		smartphoneUI.Visible = false;
 
 		var tileMap = GetNodeOrNull<Node>("TileMap");
@@ -105,53 +106,58 @@ public partial class MainCharacter : CharacterBody2D
 		FacingRight = true;  // trạng thái ban đầu là nhìn phải
 	}
 	public override void _Process(double delta)
-{
-	if (Input.IsActionJustPressed("ui_cancel"))
 	{
-		var pauseMenu = GetTree().Root.GetNode<PauseMenu>("Node/HUD/PauseMenu");
-
-		if (!GetTree().Paused)
+		if (Input.IsActionJustPressed("respawn_here"))
 		{
-			GetTree().Paused = true;
-			pauseMenu.Visible = true;
+			Respawn(true); // gọi respawn tại chỗ
 		}
-		else
-		{
-			GetTree().Paused = false;
-			pauseMenu.Visible = false;
-		}
-	}
 
-	if (Input.IsActionJustPressed("ui_tab"))
-	{
-		if (!isUsingPhone)
+		if (Input.IsActionJustPressed("ui_cancel"))
 		{
-			// Bật điện thoại
-			isUsingPhone = true;
-			isPhoneOpening = true;
-			phoneAnimTime = 0f;
-			smartphoneUI.Visible = false;
-			PlayAnim("PutOutPhone");
+			var pauseMenu = GetTree().Root.GetNode<PauseMenu>("MainScreen/HUD/PauseMenu");
 
-			// Sau 3 giây: chỉ hiện UI, vẫn để PutOutPhone chạy tiếp
-			GetTree().CreateTimer(3.0).Timeout += () =>
+			if (!GetTree().Paused)
 			{
-				if (isUsingPhone && isPhoneOpening && anim.Animation == "PutOutPhone")
-				{
-					smartphoneUI.Visible = true;
-				}
-			};
+				GetTree().Paused = true;
+				pauseMenu.Visible = true;
+			}
+			else
+			{
+				GetTree().Paused = false;
+				pauseMenu.Visible = false;
+			}
 		}
-		else
+
+
+		if (Input.IsActionJustPressed("ui_tab"))
 		{
-			// Tắt điện thoại
-			isUsingPhone = false;
-			isPhoneOpening = false;
-			smartphoneUI.Visible = false;
-			PlayAnim("default");
+			if (!isUsingPhone)
+			{
+				// Bật điện thoại
+				isUsingPhone = true;
+				isPhoneOpening = true;
+				phoneAnimTime = 0f;
+				PlayAnim("PutOutPhone");
+
+				// Sau 3 giây: chỉ hiện UI, vẫn để PutOutPhone chạy tiếp
+				GetTree().CreateTimer(3.0).Timeout += () =>
+				{
+					if (isUsingPhone && isPhoneOpening && anim.Animation == "PutOutPhone")
+					{
+						SPUI.ShowPhone();
+					}
+				};
+			}
+			else
+			{
+				// Tắt điện thoại
+				isUsingPhone = false;
+				isPhoneOpening = false;
+				SPUI.HidePhone();
+				PlayAnim("default");
+			}
 		}
-	}
-	if(isUsingPhone) return;
+		if(isUsingPhone) return;
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -197,9 +203,29 @@ public partial class MainCharacter : CharacterBody2D
 				anim.Stop();
 
 				if (jumpCount == 1)
-					PlayAnim("Jump");        // lần nhảy đầu
+				{
+					if (IsOnFloor())
+						PlayAnim("Jump");        // lần nhảy đầu từ mặt đất
+					else
+						PlayAnim("DoubleJump");  // lần nhảy đầu nhưng đang rơi → coi như double jump
+				}
 				else if (jumpCount == 2)
-					PlayAnim("DoubleJump");  // lần nhảy thứ hai
+				{
+					PlayAnim("DoubleJump");      // lần nhảy thứ hai
+				}
+			}
+			if (Input.IsActionPressed("ui_down") && Input.IsActionJustPressed("ui_accept"))
+			{
+				// Tạm thời disable one-way collision
+				SetCollisionMaskValue(2, false);
+				
+				velocity.Y = 50;
+				// Sau một khoảng thời gian bật lại
+				GetTree().CreateTimer(0.3f).Timeout += () =>
+				{
+					SetCollisionMaskValue(2, true);
+				};
+				return;
 			}
 		}
 
@@ -368,7 +394,10 @@ public partial class MainCharacter : CharacterBody2D
 				float attackRange = 35f;
 				if (GlobalPosition.DistanceTo(zombie.GlobalPosition) <= attackRange)
 				{
-					zombie.TakeDamage(1);
+					// Tính hướng từ player tới zombie
+					Vector2 attackDirection = (zombie.GlobalPosition - GlobalPosition).Normalized();
+					// Gọi TakeDamage với hướng knockback
+					zombie.TakeDamage(1, attackDirection);
 					hitZombieSound?.Play();
 					GD.Print("Hit zombie!");
 				}
@@ -412,7 +441,7 @@ public partial class MainCharacter : CharacterBody2D
 	// ======================================
 	// DAMAGE METHODS
 	// ======================================
-	public void TakeDamage()
+	public void TakeDamage(Vector2 attackDirection)
 	{
 		if (isDead) return;
 
@@ -420,6 +449,10 @@ public partial class MainCharacter : CharacterBody2D
 		isHurt = true;
 		PlayAnim("Hurt");
 		UpdateHealthBar();
+		
+		FlashRed(); // chớp đỏ
+		ApplyKnockback(attackDirection, 200f); // bật lùi
+
 
 		SetPhysicsProcess(false); // Tạm dừng xử lý
 
@@ -528,22 +561,30 @@ public partial class MainCharacter : CharacterBody2D
 			GetTree().ChangeSceneToFile("res://Scene/main_menu.tscn");
 		};
 	}
-	private void Respawn()
+	private void Respawn(bool respawnAtCurrentPosition = false)
 	{
 		currentHP = maxHP;
 		Velocity = Vector2.Zero;
 
-		var spawnPoint = GetNodeOrNull<Marker2D>("../SpawnPoint");
-		if (spawnPoint != null)
+		if (respawnAtCurrentPosition)
 		{
-			GlobalPosition = spawnPoint.GlobalPosition;
+			// Giữ nguyên vị trí hiện tại
+			GD.Print("Respawn tại chỗ hiện tại: " + GlobalPosition);
 		}
 		else
 		{
-			GD.PrintErr("Không tìm thấy SpawnPoint!");
-			GlobalPosition = new Vector2(100, 100);
+			// Respawn tại SpawnPoint như cũ
+			var spawnPoint = GetNodeOrNull<Marker2D>("../CurrentMap/SpawnPoint");
+			if (spawnPoint != null)
+			{
+				GlobalPosition = spawnPoint.GlobalPosition;
+			}
+			else
+			{
+				GD.PrintErr("Không tìm thấy SpawnPoint!");
+				GlobalPosition = new Vector2(100, 100);
+			}
 		}
-
 		SetPhysicsProcess(true);
 		isDead = false; // reset trạng thái chết
 
@@ -559,7 +600,7 @@ public partial class MainCharacter : CharacterBody2D
 		SetPhysicsProcess(false);
 
 		// Sau 3 giây mới xử lý tiếp
-		GetTree().CreateTimer(3.0).Timeout += () =>
+		GetTree().CreateTimer(7.0).Timeout += () =>
 		{
 			lives--;
 			UpdateLivesUI();
@@ -574,5 +615,17 @@ public partial class MainCharacter : CharacterBody2D
 				GameOver();
 			}
 		};
+	}
+	private async void FlashRed()
+	{
+		anim.Modulate = new Color(1, 0, 0); // đỏ
+		await ToSignal(GetTree().CreateTimer(0.1f), SceneTreeTimer.SignalName.Timeout);
+		anim.Modulate = Colors.White;       // trả lại màu
+	}
+
+	public void ApplyKnockback(Vector2 direction, float force)
+	{
+		Velocity = direction.Normalized() * force;
+		MoveAndSlide();
 	}
 }

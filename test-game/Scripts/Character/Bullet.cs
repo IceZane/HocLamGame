@@ -31,7 +31,10 @@ public partial class Bullet : Area2D
 		if (body.IsInGroup("zombie"))
 		{
 			if (body is ZombieEnemy zombie)
-				zombie.TakeDamage(1);
+			{
+				Vector2 attackDirection = (zombie.GlobalPosition - GlobalPosition).Normalized();
+				zombie.TakeDamage(1, attackDirection);
+			}
 
 			QueueFree();
 		}

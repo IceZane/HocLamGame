@@ -1,19 +1,31 @@
-[gd_scene load_steps=10 format=3 uid="uid://b7qlur7tgoyff"]
+[gd_scene load_steps=12 format=3 uid="uid://b7qlur7tgoyff"]
 
 [ext_resource type="Texture2D" uid="uid://02r5ger0jjxk" path="res://Assets/Characters/UI/Phone/Phone_1.png" id="1_jtpe5"]
 [ext_resource type="Script" uid="uid://2fk76gpmbvl4" path="res://Scripts/UI/SmartphoneUi.cs" id="1_yi8da"]
 [ext_resource type="Texture2D" uid="uid://d3vamhn1hlbn3" path="res://Assets/Characters/UI/Phone/Music_Purple.png" id="2_cesqh"]
-[ext_resource type="Texture2D" uid="uid://dh1fcd4dksicy" path="res://Assets/Characters/UI/Phone/Messages_Green.png" id="3_0rv3y"]
+[ext_resource type="Texture2D" uid="uid://bpr4lloomi1qf" path="res://Assets/Characters/UI/Phone/Questionmark_Green.png" id="4_bjtdk"]
 [ext_resource type="Texture2D" uid="uid://b2gk2hl1l2tl1" path="res://Assets/Characters/UI/Phone/Settings_Gray.png" id="5_imbvu"]
 [ext_resource type="Script" uid="uid://dfh65qidyro74" path="res://Scripts/UI/SmartPhoneScreen/MusicScreen.cs" id="6_u0bww"]
 [ext_resource type="Texture2D" uid="uid://bypj50eaunkyp" path="res://Assets/Characters/UI/Phone/play.png" id="7_bjtdk"]
 [ext_resource type="Texture2D" uid="uid://dus1vxuglv41a" path="res://Assets/Characters/UI/Phone/pause.png" id="8_wxrq8"]
 [ext_resource type="Texture2D" uid="uid://de2brvhmvt85h" path="res://Assets/Characters/UI/Phone/Back.png" id="9_5y0ll"]
+[ext_resource type="Texture2D" uid="uid://cluuecils1h2u" path="res://Assets/Characters/UI/Phone/Apple_Red.png" id="10_5y0ll"]
+[ext_resource type="Script" uid="uid://cfw38ixn040fc" path="res://Scripts/UI/SmartPhoneScreen/InstructionScreen.cs" id="10_wxrq8"]
 
-[node name="SmartphoneUI" type="CanvasLayer"]
+[node name="SmartphoneUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 11519.999
+offset_bottom = 6479.9995
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.1, 0.1)
 script = ExtResource("1_yi8da")
 
 [node name="Panel" type="TextureRect" parent="."]
+layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -50,9 +62,9 @@ columns = 4
 layout_mode = 2
 texture_normal = ExtResource("2_cesqh")
 
-[node name="Message" type="TextureButton" parent="Panel/IconMenu"]
+[node name="Instruction" type="TextureButton" parent="Panel/IconMenu"]
 layout_mode = 2
-texture_normal = ExtResource("3_0rv3y")
+texture_normal = ExtResource("4_bjtdk")
 
 [node name="Setting" type="TextureButton" parent="Panel/IconMenu"]
 layout_mode = 2
@@ -127,67 +139,194 @@ offset_bottom = 1860.9999
 scale = Vector2(10, 10)
 texture_normal = ExtResource("9_5y0ll")
 
+[node name="RefreshButton" type="TextureButton" parent="Panel/MusicScreen"]
+custom_minimum_size = Vector2(0.001, 0.001)
+layout_mode = 0
+offset_left = 1068.002
+offset_top = 2134.0
+offset_right = 1092.002
+offset_bottom = 2158.0
+scale = Vector2(5, 5)
+texture_normal = ExtResource("10_5y0ll")
+stretch_mode = 0
+
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="Panel/MusicScreen"]
 
-[node name="MessageScreen" type="Control" parent="Panel"]
-visible = false
+[node name="InstructionScreen" type="Control" parent="Panel"]
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 180.00096
+offset_top = 300.00027
+offset_right = 1480.001
+offset_bottom = 2590.0002
+script = ExtResource("10_wxrq8")
 
-[node name="MessageScreen" type="ColorRect" parent="Panel/MessageScreen"]
+[node name="InstructionBackground" type="ColorRect" parent="Panel/InstructionScreen"]
 layout_mode = 0
-offset_left = 192.0
-offset_top = 290.0
-offset_right = 1474.0
-offset_bottom = 2593.0
+offset_left = -0.00047302246
+offset_top = -19.99997
+offset_right = 1303.9976
+offset_bottom = 2283.0
 color = Color(1, 0.5568628, 1, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MessageScreen"]
+[node name="InstructionList" type="VBoxContainer" parent="Panel/InstructionScreen"]
+custom_minimum_size = Vector2(200, 200)
 layout_mode = 0
-offset_left = 192.0
-offset_top = 298.0
-offset_right = 1462.0
-offset_bottom = 2577.0
+offset_left = 39.999985
+offset_top = 209.99997
+offset_right = 1270.0
+offset_bottom = 2180.0
+theme_override_constants/separation = 4
 
-[node name="MomChat" type="Panel" parent="Panel/MessageScreen/VBoxContainer"]
+[node name="Basic" type="Button" parent="Panel/InstructionScreen/InstructionList"]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
-size_flags_stretch_ratio = 0.0
+theme_override_font_sizes/font_size = 70
+text = "Basic"
 
-[node name="Mom" type="Label" parent="Panel/MessageScreen/VBoxContainer/MomChat"]
-layout_mode = 0
-offset_right = 200.0
-offset_bottom = 199.0
-theme_override_font_sizes/font_size = 50
-text = "MOM"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="MomMessages" type="RichTextLabel" parent="Panel/MessageScreen/VBoxContainer/MomChat"]
-layout_mode = 0
-offset_left = 304.0
-offset_right = 1267.0
-offset_bottom = 200.0
-
-[node name="FriendChat" type="Panel" parent="Panel/MessageScreen/VBoxContainer"]
+[node name="Inventory" type="Button" parent="Panel/InstructionScreen/InstructionList"]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
+theme_override_font_sizes/font_size = 70
+text = "Inventory"
 
-[node name="Friend" type="Label" parent="Panel/MessageScreen/VBoxContainer/FriendChat"]
+[node name="Weapon" type="Button" parent="Panel/InstructionScreen/InstructionList"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+theme_override_font_sizes/font_size = 70
+text = "Weapon"
+
+[node name="NPC" type="Button" parent="Panel/InstructionScreen/InstructionList"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+theme_override_font_sizes/font_size = 70
+text = "NPC"
+
+[node name="SmartPhone" type="Button" parent="Panel/InstructionScreen/InstructionList"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+theme_override_font_sizes/font_size = 70
+text = "Smart Phone"
+
+[node name="InstructionTitle" type="Control" parent="Panel/InstructionScreen"]
+self_modulate = Color(1, 1, 0.019607844, 1)
+anchors_preset = 0
+offset_left = 59.999954
+offset_right = 1270.001
+offset_bottom = 210.0
+
+[node name="BackButton" type="TextureButton" parent="Panel/InstructionScreen/InstructionTitle"]
+custom_minimum_size = Vector2(0, 1)
 layout_mode = 0
-offset_right = 194.0
-offset_bottom = 202.0
-theme_override_font_sizes/font_size = 50
-text = "Friend"
+offset_left = -40.000244
+offset_right = -11.666992
+offset_bottom = 24.0
+scale = Vector2(6, 6)
+size_flags_horizontal = 2
+size_flags_stretch_ratio = 0.6
+texture_normal = ExtResource("7_bjtdk")
+flip_h = true
+
+[node name="TitleLabel" type="Label" parent="Panel/InstructionScreen/InstructionTitle"]
+layout_mode = 0
+offset_left = 259.99976
+offset_top = 2.670288e-05
+offset_right = 939.99976
+offset_bottom = 150.00003
+size_flags_horizontal = 2
+theme_override_font_sizes/font_size = 102
+text = "Instruction"
 horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="FriendMessages" type="RichTextLabel" parent="Panel/MessageScreen/VBoxContainer/FriendChat"]
+[node name="BasicPanel" type="ColorRect" parent="Panel/InstructionScreen"]
 layout_mode = 0
-offset_left = 304.0
-offset_right = 1267.0
-offset_bottom = 197.0
+offset_top = 149.99998
+offset_right = 1300.0
+offset_bottom = 2290.0
+
+[node name="Label" type="Label" parent="Panel/InstructionScreen/BasicPanel"]
+layout_mode = 0
+offset_left = 19.999998
+offset_top = 19.999998
+offset_right = 1290.0
+offset_bottom = 2130.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 80
+text = "W: Climb Ladder 
+A: Left
+S: Crouch (Coming Soon)
+D: Right
+U: Shoot
+I: Melee
+R: Reload
+Space: Jump ( can double jump )
+Tab: Phone
+Esc: Pause"
+
+[node name="InventoryPanel" type="ColorRect" parent="Panel/InstructionScreen"]
+visible = false
+layout_mode = 0
+offset_top = 149.99998
+offset_right = 1300.0
+offset_bottom = 2290.0
+
+[node name="Label" type="Label" parent="Panel/InstructionScreen/InventoryPanel"]
+layout_mode = 0
+offset_left = 19.999998
+offset_top = 19.999998
+offset_right = 1280.0
+offset_bottom = 2130.0
+
+[node name="WeaponPanel" type="ColorRect" parent="Panel/InstructionScreen"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.046000004
+anchor_bottom = 0.025
+offset_left = -1.335144e-05
+offset_top = 149.99998
+offset_right = 1240.2
+offset_bottom = 2232.75
+
+[node name="Label" type="Label" parent="Panel/InstructionScreen/WeaponPanel"]
+layout_mode = 0
+offset_left = 19.999998
+offset_top = 19.999998
+offset_right = 1290.0
+offset_bottom = 2130.0
+
+[node name="NPCPanel" type="ColorRect" parent="Panel/InstructionScreen"]
+visible = false
+layout_mode = 0
+offset_top = 149.99998
+offset_right = 1300.0
+offset_bottom = 2290.0
+
+[node name="Label" type="Label" parent="Panel/InstructionScreen/NPCPanel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="SmartPhonePanel" type="ColorRect" parent="Panel/InstructionScreen"]
+layout_mode = 0
+offset_top = 149.99998
+offset_right = 1300.0
+offset_bottom = 2290.0
+
+[node name="Label" type="Label" parent="Panel/InstructionScreen/SmartPhonePanel"]
+layout_mode = 0
+offset_right = 1300.0
+offset_bottom = 2030.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 80
+text = "Press Tab to Use SmartPhone
+Anything can do on your Phone:
+- Listen to music (or Custom)
+- Check Keyboard
+- Custom your Phone
+- Check Map
+
+
+"
 
 [node name="SettingScreen" type="Control" parent="Panel"]
 visible = false
@@ -259,7 +398,7 @@ size_flags_vertical = 4
 
 [node name="HomeButton" type="Button" parent="Panel"]
 layout_mode = 0
-offset_left = 498.0
-offset_top = 2593.0
-offset_right = 989.0
-offset_bottom = 2863.0
+offset_left = 580.0
+offset_top = 2645.0
+offset_right = 1010.0
+offset_bottom = 2836.0
